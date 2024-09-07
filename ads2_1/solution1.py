@@ -6,9 +6,7 @@ class SimpleTreeNode:
         self.NodeValue = val # Node value.
         self.Parent = parent # Parent (None for root node).
         self.Children : list[SimpleTreeNode] = [] # List of child nodes.
-    def __del__(self):
-        print("DELETED!!!!!")
-	
+
 class SimpleTree:
     ''' Holds tree root, also stores nodes count. '''
     def __init__(self, root : SimpleTreeNode) -> None:
@@ -25,6 +23,7 @@ class SimpleTree:
             self.Root = NewChild
             return
         if ParentNode is None:
+            NewChild.Children.append(self.Root)
             self.Root.Parent = NewChild
             self.Root = NewChild
             return
@@ -91,11 +90,10 @@ class SimpleTree:
 
     def _GetLeafCount(self, ParentNode : SimpleTreeNode, LeavesCount : int) -> int:
         ''' Recursively counts number of leaves. '''
-        if not ParentNode.Children:
-            LeavesCount += 1
-            return LeavesCount
         for child in ParentNode.Children:
             self._GetLeafCount(child, LeavesCount)
+        if len(ParentNode.Children) == 0:
+            LeavesCount += 1
         return LeavesCount
 
     def LeafCount(self) -> int:

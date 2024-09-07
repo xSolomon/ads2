@@ -73,5 +73,48 @@ class SimpleTreeTests(unittest.TestCase):
                 self.assertEqual(self.tree.FindNodesByValue(item), [])
         self.assertEqual(self.tree.FindNodesByValue(123), [test_node])
 
+    def test_insert_in_root_two_times(self) -> None:
+        ''' Expected node count = 2, leaf count = 1, root to be second inserted node. '''
+        first_node : SimpleTreeNode = SimpleTreeNode(123, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(456, None)
+        self.tree.AddChild(None, first_node)
+        self.tree.AddChild(None, second_node)
+        self.assertEqual(self.tree.Count(), 2)
+        self.assertEqual(self.tree.LeafCount(), 1)
+        self.assertEqual(self.tree.Root, second_node)
+
+    def test_insert_in_root_then_under_root(self) -> None:
+        ''' Expected node count = 2, leaf count = 1, root to be first inserted node. '''
+        first_node : SimpleTreeNode = SimpleTreeNode(123, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(456, None)
+        self.tree.AddChild(None, first_node)
+        self.tree.AddChild(first_node, second_node)
+        self.assertEqual(self.tree.Count(), 2)
+        self.assertEqual(self.tree.LeafCount(), 1)
+        self.assertEqual(self.tree.Root, first_node)
+
+    def test_on_predefined_tree(self) -> None:
+        ''' Expected node count = 9, leaves count = 4. '''
+        first_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(222, None)
+        third_node : SimpleTreeNode = SimpleTreeNode(333, None)
+        fourth_node : SimpleTreeNode = SimpleTreeNode(444, None)
+        fifth_node : SimpleTreeNode = SimpleTreeNode(555, None)
+        sixth_node : SimpleTreeNode = SimpleTreeNode(666, None)
+        seventh_node : SimpleTreeNode = SimpleTreeNode(777, None)
+        eighth_node : SimpleTreeNode = SimpleTreeNode(888, None)
+        ninth_node : SimpleTreeNode = SimpleTreeNode(999, None)
+        self.tree.AddChild(None, first_node)
+        self.tree.AddChild(first_node, second_node)
+        self.tree.AddChild(first_node, third_node)
+        self.tree.AddChild(second_node, fourth_node)
+        self.tree.AddChild(second_node, fifth_node)
+        self.tree.AddChild(third_node, sixth_node)
+        self.tree.AddChild(fifth_node, seventh_node)
+        self.tree.AddChild(fifth_node, eighth_node)
+        self.tree.AddChild(sixth_node, ninth_node)
+        self.assertEqual(self.tree.Count(), 9)
+        self.assertEqual(self.tree.LeafCount(), 4)
+
 
 unittest.main()
