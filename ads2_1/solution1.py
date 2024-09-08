@@ -82,6 +82,7 @@ class SimpleTree:
         if OriginalNode is None or NewParent is None:
             return
         OriginalNode.Parent.Children.remove(OriginalNode)
+        self.NodesCount -= 1
         self.AddChild(NewParent, OriginalNode)
 
     def Count(self) -> int:

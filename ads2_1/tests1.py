@@ -54,7 +54,7 @@ class SimpleTreeTests(unittest.TestCase):
         ''' Expected leaf count = 1. '''
         test_node : SimpleTreeNode = SimpleTreeNode(123, None)
         self.tree.AddChild(None, test_node)
-        #self.assertEqual(self.tree.LeafCount(), 1)
+        self.assertEqual(self.tree.LeafCount(), 1)
 
     def test_get_nodes_on_single_node_tree(self) -> None:
         ''' Expected list with exactly one node (root) '''
@@ -80,7 +80,7 @@ class SimpleTreeTests(unittest.TestCase):
         self.tree.AddChild(None, first_node)
         self.tree.AddChild(None, second_node)
         self.assertEqual(self.tree.Count(), 2)
-        #self.assertEqual(self.tree.LeafCount(), 1)
+        self.assertEqual(self.tree.LeafCount(), 1)
         self.assertEqual(self.tree.Root, second_node)
 
     def test_insert_in_root_then_under_root(self) -> None:
@@ -90,11 +90,15 @@ class SimpleTreeTests(unittest.TestCase):
         self.tree.AddChild(None, first_node)
         self.tree.AddChild(first_node, second_node)
         self.assertEqual(self.tree.Count(), 2)
-        #self.assertEqual(self.tree.LeafCount(), 1)
+        self.assertEqual(self.tree.LeafCount(), 1)
         self.assertEqual(self.tree.Root, first_node)
 
     def test_on_predefined_tree(self) -> None:
-        ''' Expected node count = 9, leaves count = 4. '''
+        ''' Expected node count = 9, leaves count = 4,
+            tree structure must be exactly as in test list.
+            All values must be found.
+            Move mustn't change nodes count, but change tree structure. 
+            Tree structure after all deletions must be exactly as in the test lists. '''
         first_node : SimpleTreeNode = SimpleTreeNode(111, None)
         second_node : SimpleTreeNode = SimpleTreeNode(222, None)
         third_node : SimpleTreeNode = SimpleTreeNode(333, None)
@@ -114,8 +118,52 @@ class SimpleTreeTests(unittest.TestCase):
         self.tree.AddChild(fifth_node, eighth_node)
         self.tree.AddChild(sixth_node, ninth_node)
         self.assertEqual(self.tree.Count(), 9)
-        #self.assertEqual(self.tree.GetAllNodes(), [first_node, second_node, third_node])
         self.assertEqual(self.tree.LeafCount(), 4)
+        test_get : list[SimpleTreeNode] = [first_node, second_node, fourth_node, fifth_node,
+        seventh_node, eighth_node, third_node, sixth_node, ninth_node]
+        test_search : list[SimpleTreeNode] = [first_node, second_node, third_node, fourth_node,
+        fifth_node, sixth_node, seventh_node, eighth_node, ninth_node]
+        self.assertEqual(self.tree.GetAllNodes(), test_get)
+        for i in range(9):
+            with self.subTest(i = i, value = 111 + i * 111):
+                self.assertEqual(self.tree.FindNodesByValue(111 + i * 111), [test_search[i]])
+        self.tree.MoveNode(fifth_node, third_node)
+        test_move : list[SimpleTreeNode] = [first_node, second_node, fourth_node, third_node,
+        sixth_node, ninth_node, fifth_node, seventh_node, eighth_node]
+        self.assertEqual(self.tree.GetAllNodes(), test_move)
+        self.tree.DeleteNode(second_node)
+        test_first_delete : list[SimpleTreeNode] = [first_node, third_node,
+        sixth_node, ninth_node, fifth_node, seventh_node, eighth_node]
+        self.assertEqual(self.tree.GetAllNodes(), test_first_delete)
+        self.tree.DeleteNode(sixth_node)
+        test_second_delete : list[SimpleTreeNode] = [first_node, third_node,
+            fifth_node, seventh_node, eighth_node]
+        self.assertEqual(self.tree.GetAllNodes(), test_second_delete)
 
+    def test_search_on_predefined_sameval_tree(self) -> None:
+        ''' Expected list with all nodes in exactly same position they are in the test list. '''
+        first_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        third_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        fourth_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        fifth_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        sixth_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        seventh_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        eighth_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        ninth_node : SimpleTreeNode = SimpleTreeNode(111, None)
+        self.tree.AddChild(None, first_node)
+        self.tree.AddChild(first_node, second_node)
+        self.tree.AddChild(first_node, third_node)
+        self.tree.AddChild(second_node, fourth_node)
+        self.tree.AddChild(second_node, fifth_node)
+        self.tree.AddChild(third_node, sixth_node)
+        self.tree.AddChild(fifth_node, seventh_node)
+        self.tree.AddChild(fifth_node, eighth_node)
+        self.tree.AddChild(sixth_node, ninth_node)
+        self.assertEqual(self.tree.Count(), 9)
+        self.assertEqual(self.tree.LeafCount(), 4)
+        test_search : list[SimpleTreeNode] = [first_node, second_node, fourth_node, fifth_node,
+        seventh_node, eighth_node, third_node, sixth_node, ninth_node]
+        self.assertEqual(self.tree.FindNodesByValue(111), test_search)
 
 unittest.main()
