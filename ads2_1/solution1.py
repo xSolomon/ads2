@@ -91,7 +91,7 @@ class SimpleTree:
     def _GetLeafCount(self, ParentNode : SimpleTreeNode, LeavesCount : int) -> int:
         ''' Recursively counts number of leaves. '''
         for child in ParentNode.Children:
-            self._GetLeafCount(child, LeavesCount)
+            LeavesCount += self._GetLeafCount(child, 0)
         if len(ParentNode.Children) == 0:
             LeavesCount += 1
         return LeavesCount
