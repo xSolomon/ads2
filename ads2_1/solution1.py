@@ -10,8 +10,8 @@ class SimpleTreeNode:
 class SimpleTree:
     ''' Holds tree root, also stores nodes count. '''
     def __init__(self, root : SimpleTreeNode) -> None:
-        self.Root : SimpleTreeNode = root # корень, может быть None
-        self.NodesCount : int = 0 if self.Root is None else 1 # Total nodes in the tree
+        self.Root : SimpleTreeNode = root # Root, can be None.
+        self.NodesCount : int = 0 if self.Root is None else 1 # Total nodes in the tree.
 
     def AddChild(self, ParentNode : SimpleTreeNode, NewChild : SimpleTreeNode) -> None:
         ''' Adds new node as the most right child. '''
