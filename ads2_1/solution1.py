@@ -11,13 +11,12 @@ class SimpleTree:
     ''' Holds tree root, also stores nodes count. '''
     def __init__(self, root : SimpleTreeNode) -> None:
         self.Root = root # корень, может быть None
-        self.NodesCount : int = 0 # Total nodes in the tree
+        self.NodesCount : int = 0 if self.Root is None else 1 # Total nodes in the tree
 
     def AddChild(self, ParentNode : SimpleTreeNode, NewChild : SimpleTreeNode) -> None:
         ''' Adds new node as the most right child. '''
         if NewChild is None:
             return
-
         self.NodesCount += 1
         if ParentNode is None and self.Root is None:
             self.Root = NewChild
@@ -80,6 +79,8 @@ class SimpleTree:
 
     def MoveNode(self, OriginalNode : SimpleTreeNode, NewParent : SimpleTreeNode):
         if OriginalNode is None or NewParent is None:
+            return
+        if OriginalNode is NewParent:
             return
         OriginalNode.Parent.Children.remove(OriginalNode)
         self.NodesCount -= 1

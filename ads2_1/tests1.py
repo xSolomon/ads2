@@ -26,6 +26,7 @@ class SimpleTreeTests(unittest.TestCase):
         ''' Expected 0. '''
         self.assertEqual(self.tree.LeafCount(), 0)
 
+
     def test_find_on_empty_tree(self) -> None:
         ''' Expected empty list for each of the subtests. '''
         test_on : list = [1, 3, -1521541141, 0, 'qwerty', True, None]
@@ -42,6 +43,32 @@ class SimpleTreeTests(unittest.TestCase):
         self.tree.AddChild(None, None)
         self.assertEqual(self.tree.Count(), 0)
         self.assertIsNone(self.tree.Root)
+
+    def test_constructing_tree_with_root(self) -> None:
+        ''' Expected node and leaf count = 1. '''
+        first_node = SimpleTreeNode(5, None)
+        test_tree = SimpleTree(first_node)
+        self.assertEqual(test_tree.Root, first_node)
+        self.assertEqual(test_tree.Count(), 1)
+        self.assertEqual(test_tree.LeafCount(), 1)
+
+    def test_move(self) -> None:
+        ''' Expected nothing changed in each of situations:
+            1) Moving None node.
+            2) Moving node to itself as parent.
+            3) Moving node to same parent. '''
+        first_node = SimpleTreeNode(5, None)
+        second_node = SimpleTreeNode(7, None)
+        test_tree = SimpleTree(first_node)
+        test_tree.AddChild(first_node, second_node)
+        self.tree.MoveNode(None, test_tree.Root)
+        self.tree.MoveNode(second_node, second_node)
+        self.tree.MoveNode(second_node, first_node)
+        self.assertEqual(test_tree.Root, first_node)
+        self.assertEqual(test_tree.Count(), 2)
+        self.assertEqual(test_tree.LeafCount(), 1)
+        self.assertEqual(test_tree.GetAllNodes(), [first_node, second_node])
+        
 
     def test_inserting_in_empty_tree(self) -> None:
         ''' Expected nodes count = 1 and inserted node to be new root. '''
