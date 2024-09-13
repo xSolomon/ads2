@@ -17,18 +17,22 @@ class BSTFind:
         self.ToLeft : bool = False # True if new node must be left child.
 
 class BST:
-    ''' Binary sorted tree. '''
+    ''' Binary search tree. '''
     def __init__(self, node : BSTNode) -> None:
         self.Root = node # Tree root, can be None.
         self.NodesCount : int = 0 if self.Root is None else 1 # Total nodes in the tree.
-    
+
+    def _IsLeaf(self, Node : BSTNode) -> bool:
+        ''' Checks whether provided node has any childs. '''
+        return Node.LeftChild is None and Node.RightChild is None
+
     def _FindNodeWithKey(self, FromNode : BSTFind, key) -> BSTFind:
         ''' Finds if there is node with matching key,
             or place where it should be. '''
-        if FromNode.NodeKey < key and FromNode.LeftChild is not None:
-            return _FindNodeWithKey(FromNode.LeftChild, key)
-        if FromNode.NodeKey > key and FromNode.RightChild is not None:
-            return _FindNodeWithKey(FromNode.RightChild, key)
+        if FromNode.NodeKey > key and FromNode.LeftChild is not None:
+            return self._FindNodeWithKey(FromNode.LeftChild, key)
+        if FromNode.NodeKey < key and FromNode.RightChild is not None:
+            return self._FindNodeWithKey(FromNode.RightChild, key)
 
         result : BSTFind = BSTFind()
         result.Node = FromNode
@@ -36,7 +40,7 @@ class BST:
             result.NodeHasKey = True
             return result
         result.NodeHasKey = False
-        result.ToLeft = True if FromNode.NodeKey < key else False
+        result.ToLeft = True if FromNode.NodeKey > key else False
         return result
 
     def FindNodeByKey(self, key) -> BSTFind:
@@ -55,24 +59,24 @@ class BST:
         if NodeParent.Node is None:
             self.Root = BSTNode(key, val, None)
             return True
-        NewNode : BSTNode = BSTNode(key, val, result.Node)
+        new_node : BSTNode = BSTNode(key, val, NodeParent.Node)
         if NodeParent.ToLeft:
-            NodeParent.LeftChild = NewNode
+            NodeParent.Node.LeftChild = new_node
             return True
-        NodeParent.RightChild = NewNode
+        NodeParent.Node.RightChild = new_node
         return True
 
     def _FinMin(self, FromNode : BSTNode) -> BSTNode:
         ''' Find minimum value in the tree. '''
         if FromNode.LeftChild is None:
             return FromNode
-        return FinMin(FromNode.LeftChild)
+        return self._FinMin(FromNode.LeftChild)
 
     def _FinMax(self, FromNode : BSTNode) -> BSTNode:
         ''' Find maximum value in the tree. '''
         if FromNode.RightChild is None:
             return FromNode
-        return FinMin(FromNode.RightChild)
+        return self._FinMin(FromNode.RightChild)
 
     def FinMinMax(self, FromNode : BSTNode, FindMax) -> BSTNode:
         ''' Find minimum or maximum value in the tree. '''
@@ -80,56 +84,61 @@ class BST:
             return None
         return self._FinMax if FindMax else self._FinMin
 
-    def _FindSuccessor(self, CurNode) -> BSTNode:
-        if CurNode.LeftChild is None and CurNode.RightChild is None:
-            return ForNode
+    def _FindSuccessor(self, CurNode : BSTNode) -> BSTNode:
+        ''' Find node that should replace the node we deleting. '''
         if CurNode.LeftChild is None:
-            return CurNode.RightChild
-        return _FindSuccessor(CurNode.LeftChild)
+            return CurNode
+        return self._FindSuccessor(CurNode.LeftChild)
 
     def _DeleteNode(self, NodeToDelete : BSTNode) -> bool:
+        ''' Delete node and replace it with correct successor. '''
         if NodeToDelete is None: # Nothing to delete.
             return False
+        # Cases where we delete leaf node:
+        if self.Count() == 0: # Deleting last node.
+            self.Root = None
+            return True
+        if self._IsLeaf(NodeToDelete) and NodeToDelete is NodeToDelete.Parent.LeftChild:
+            # Deleting leaf node that is LEFT child of its parent.
+            NodeToDelete.Parent.LeftChild = None
+            return True
+        if self._IsLeaf(NodeToDelete) and NodeToDelete is NodeToDelete.Parent.RightChild:
+            # Deleting leaf node that is RIGHT child of its parent.
+            NodeToDelete.Parent.RightChild = None
+            return True
+        # Cases where we delete node with only LEFT child:
         if NodeToDelete is self.Root and NodeToDelete.RightChild is None:
             # Deleting root with only left child.
             NodeToDelete.LeftChild.Parent = None
             self.Root = self.Root.LeftChild
             return True
-        if NodeToDelete.LeftChild is None and NodeToDelete.RightChild is None and \
-            NodeToDelete is NodeToDelete.Parent.LeftChild: # Deleting left leaf child.
-            NodeToDelete.Parent.LeftChild = None
-            return True
-        if NodeToDelete.LeftChild is None and NodeToDelete.RightChild is None and \
-            NodeToDelete is NodeToDelete.Parent.LeftChild: # Deleting right leaf child.
-            NodeToDelete.Parent.RightChild = None
-            return True
         if NodeToDelete.RightChild is None and NodeToDelete is NodeToDelete.Parent.LeftChild:
-            # Deleting left node with only left child.
+            # Deleting parent's LEFT node with only left child.
             NodeToDelete.Parent.LeftChild = NodeToDelete.LeftChild
             NodeToDelete.LeftChild.Parent = NodeToDelete.Parent
             return True
         if NodeToDelete.RightChild is None and NodeToDelete is NodeToDelete.Parent.RightChild:
-            # Deleting right node with only left child.
-            NodeToDelete.Parent.RightChild = NodeToDelete.RightChild
+            # Deleting parent's RIGHT node with only left child.
+            NodeToDelete.Parent.RightChild = NodeToDelete.LeftChild
             NodeToDelete.LeftChild.Parent = NodeToDelete.Parent
             return True
-        Successor : BSTNode = self._FindSuccessor(NodeToDelete.RightChild)
-        NodeToDelete.key = Successor.NodeKey
-        NodeToDelete.value = Successor.NodeValue
-        return self._DeleteNode(Successor)
+        # Node has right child, find successor in the right subtree,
+        # copy values and delete successor node instead.
+        successor : BSTNode = self._FindSuccessor(NodeToDelete.RightChild)
+        NodeToDelete.NodeKey = successor.NodeKey
+        NodeToDelete.NodeValue = successor.NodeValue
+        return self._DeleteNode(successor)
 
     def DeleteNodeByKey(self, key) -> bool:
         ''' Deletes node by key, keeping tree balanced. '''
-        NodeToDelete : BSTFind = self.FindNodeByKey(key)
-        if NodeToDelete.Node is None or not NodeToDelete.NodeHasKey: # Nothing to delete.
+        node_to_delete : BSTFind = self.FindNodeByKey(key)
+        if node_to_delete.Node is None or not node_to_delete.NodeHasKey: # Nothing to delete.
             return False
         self.NodesCount -= 1
-        if self.NodesCount == 0: # Deleting last node in the tree.
-            self.Root = None
-            return True
-        return self._DeleteNode(NodeToDelete.Node)
+        return self._DeleteNode(node_to_delete.Node)
 
     def Count(self) -> int:
+        ''' Returns current nodes number in the tree. '''
         return self.NodesCount
 
 
