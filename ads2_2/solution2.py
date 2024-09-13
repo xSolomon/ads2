@@ -76,13 +76,13 @@ class BST:
         ''' Find maximum value in the tree. '''
         if FromNode.RightChild is None:
             return FromNode
-        return self._FinMin(FromNode.RightChild)
+        return self._FinMax(FromNode.RightChild)
 
     def FinMinMax(self, FromNode : BSTNode, FindMax) -> BSTNode:
         ''' Find minimum or maximum value in the tree. '''
         if FromNode is None:
             return None
-        return self._FinMax if FindMax else self._FinMin
+        return self._FinMax(FromNode) if FindMax else self._FinMin(FromNode)
 
     def _FindSuccessor(self, CurNode : BSTNode) -> BSTNode:
         ''' Find node that should replace the node we deleting. '''

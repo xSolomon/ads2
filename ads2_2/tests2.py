@@ -34,6 +34,8 @@ class BSTTests(unittest.TestCase):
         self.assertFalse(self.tree.DeleteNodeByKey(True))
         self.assertIsNone(self.tree.FinMinMax(self.tree.Root, True))
         self.assertIsNone(self.tree.FinMinMax(self.tree.Root, False))
+        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, True))
+        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, False))
 
     def test_add_find_delete_in_empty_tree(self) -> None:
         ''' Tree size should be 1, new node must be root node.
@@ -58,6 +60,8 @@ class BSTTests(unittest.TestCase):
         self.assertIs(self.tree.FindNodeByKey(12).Node, self.tree.Root.RightChild)
         self.assertIs(self.tree.FindNodeByKey(10).Node, self.tree.Root.RightChild)
         self.assertIs(self.tree.FindNodeByKey(14).Node, self.tree.Root.RightChild)
+        self.assertIs(self.tree.FinMinMax(self.tree.Root, True), self.tree.Root.RightChild)
+        self.assertIs(self.tree.FinMinMax(self.tree.Root, False), self.tree.Root.LeftChild)
         self.assertTrue(self.tree.DeleteNodeByKey(8))
         self.assertIsNone(self.tree.Root.RightChild)
         self.assertIsNotNone(self.tree.Root.LeftChild)
@@ -96,6 +100,8 @@ class BSTTests(unittest.TestCase):
                     self.assertTrue(self.tree._IsLeaf(node_to_check))
                 if node_to_check.NodeKey % 2 == 0:
                     self.assertFalse(self.tree._IsLeaf(node_to_check))
+        self.assertIs(self.tree.FinMinMax(self.tree.Root, True), self.tree.Root.RightChild.RightChild.RightChild)
+        self.assertIs(self.tree.FinMinMax(self.tree.Root, False), self.tree.Root.LeftChild.LeftChild.LeftChild)
         self.tree.DeleteNodeByKey(2)
         self.assertFalse(self.tree._IsLeaf(self.tree.FindNodeByKey(3).Node))
         self.tree.DeleteNodeByKey(3)
