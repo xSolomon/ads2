@@ -4,8 +4,7 @@ import unittest
 from solution3 import BSTNode, BSTFind, BST
 
 class BSTTests(unittest.TestCase):
-    ''' Tests for BST FindNodeByKey, AddKeyValue, FinMinMax, DeleteNodeByKey,
-        Count methods. '''
+    ''' Tests for BST depth and breadth traversals. '''
     def setUp(self) -> None:
         ''' Test preparations. '''
         self.tree = BST(None)
@@ -19,32 +18,11 @@ class BSTTests(unittest.TestCase):
         del self.tree
 
     def test_on_empty_tree(self) -> None:
-        ''' Expected nodes count = 0.
-            Find must have None in Node field.
-            Delete must always be False.
-            Min and Max should be None.'''
-        self.assertEqual(self.tree.Count(), 0)
-        self.assertIsNone(self.tree.FindNodeByKey(None).Node)
-        self.assertIsNone(self.tree.FindNodeByKey(1).Node)
-        self.assertIsNone(self.tree.FindNodeByKey('abc').Node)
-        self.assertIsNone(self.tree.FindNodeByKey(True).Node)
-        self.assertFalse(self.tree.DeleteNodeByKey(None))
-        self.assertFalse(self.tree.DeleteNodeByKey(1))
-        self.assertFalse(self.tree.DeleteNodeByKey('abc'))
-        self.assertFalse(self.tree.DeleteNodeByKey(True))
-        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, True))
-        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, False))
-        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, True))
-        self.assertIsNone(self.tree.FinMinMax(self.tree.Root, False))
-
-    def test_add_find_delete_in_empty_tree(self) -> None:
-        ''' Tree size should be 1, new node must be root node.
-            Find must return root node, delete must be successful. '''
-        self.assertTrue(self.tree.AddKeyValue(5, 5))
-        self.assertEqual(self.tree.Count(), 1)
-        self.assertIsNotNone(self.tree.Root)
-        self.assertIs(self.tree.FindNodeByKey(5).Node, self.tree.Root)
-        self.assertTrue(self.tree.DeleteNodeByKey(5))
+        ''' Expected each traversal to return empty tuple. '''
+        self.assertEqual(self.tree.DeepAllNodes(0), ())
+        self.assertEqual(self.tree.DeepAllNodes(1), ())
+        self.assertEqual(self.tree.DeepAllNodes(2), ())
+        self.assertEqual(self.tree.WideAllNodes(), ())
 
     def test_on_small_predefined_tree(self) -> None:
         ''' Test functions on tree with three nodes (root with two childs).
@@ -52,25 +30,14 @@ class BSTTests(unittest.TestCase):
         self.assertTrue(self.tree.AddKeyValue(8, 8))
         self.assertTrue(self.tree.AddKeyValue(4, 4))
         self.assertTrue(self.tree.AddKeyValue(12, 12))
-        self.assertEqual(self.tree.Count(), 3)
-        self.assertIs(self.tree.FindNodeByKey(4).Node, self.tree.Root.LeftChild)
-        self.assertIs(self.tree.FindNodeByKey(3).Node, self.tree.Root.LeftChild)
-        self.assertIs(self.tree.FindNodeByKey(5).Node, self.tree.Root.LeftChild)
-        self.assertIs(self.tree.FindNodeByKey(8).Node, self.tree.Root)
-        self.assertIs(self.tree.FindNodeByKey(12).Node, self.tree.Root.RightChild)
-        self.assertIs(self.tree.FindNodeByKey(10).Node, self.tree.Root.RightChild)
-        self.assertIs(self.tree.FindNodeByKey(14).Node, self.tree.Root.RightChild)
-        self.assertIs(self.tree.FinMinMax(self.tree.Root, True), self.tree.Root.RightChild)
-        self.assertIs(self.tree.FinMinMax(self.tree.Root, False), self.tree.Root.LeftChild)
-        self.assertTrue(self.tree.DeleteNodeByKey(8))
-        self.assertIsNone(self.tree.Root.RightChild)
-        self.assertIsNotNone(self.tree.Root.LeftChild)
-        self.assertEqual(self.tree.Count(), 2)
-        self.assertIs(self.tree.FindNodeByKey(4).Node, self.tree.Root.LeftChild)
-        self.assertIs(self.tree.FindNodeByKey(12).Node, self.tree.Root)
-        self.assertTrue(self.tree.DeleteNodeByKey(12))
-        self.assertTrue(self.tree.DeleteNodeByKey(4))
-        self.assertEqual(self.tree.Count(), 0)
+        self.assertEqual(self.tree.DeepAllNodes(0),
+            (self.tree.Root.LeftChild, self.tree.Root, self.tree.Root.RightChild))
+        self.assertEqual(self.tree.DeepAllNodes(1),
+            (self.tree.Root.LeftChild, self.tree.Root.RightChild, self.tree.Root))
+        self.assertEqual(self.tree.DeepAllNodes(2),
+            (self.tree.Root, self.tree.Root.LeftChild, self.tree.Root.RightChild))
+        self.assertEqual(self.tree.WideAllNodes(),
+            (self.tree.Root, self.tree.Root.LeftChild, self.tree.Root.RightChild))
 
     def test_on_medium_predefined_tree(self) -> None:
         ''' Test on tree with 15 nodes total (with keys from 1 to 15). '''

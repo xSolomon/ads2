@@ -151,7 +151,8 @@ class BST:
             if Node.RightChild is not None:
                 nodes_in_next_level.append(Node.RightChild)
             ResultNodes.append(Node)
-        self._BreadthAllNodes(ResultNodes, nodes_in_next_level)
+        if len(nodes_in_next_level) > 0:
+            self._BreadthAllNodes(ResultNodes, nodes_in_next_level)
         if CurrentLevelNodes[0] is self.Root:
             return tuple(ResultNodes)
 
@@ -204,7 +205,7 @@ class BST:
             1: self._PostOrder,
             2: self._PreOrder
         }
-        return traversal_version[search_order]
+        return traversal_version[search_order](self.Root, [])
 
 
 
