@@ -141,44 +141,55 @@ class BST:
         ''' Returns current nodes number in the tree. '''
         return self.NodesCount
 
-    def _BreadthAllNodes(self, ) -> tuple[BSTNode]:
-        '''  '''
+    def _BreadthAllNodes(self, ResultNodes : list[BSTNode],
+        CurrentLevelNodes : list[BSTNode]) -> tuple[BSTNode]:
+        ''' Breadth traversal. '''
+        nodes_in_next_level : list[BSTNode] = []
+        for Node in CurrentLevelNodes:
+            if Node.LeftChild is not None:
+                nodes_in_next_level.append(Node.LeftChild)
+            if Node.RightChild is not None:
+                nodes_in_next_level.append(Node.RightChild)
+            ResultNodes.append(Node)
+        self._BreadthAllNodes(ResultNodes, nodes_in_next_level)
+        if CurrentLevelNodes[0] is self.Root:
+            return tuple(ResultNodes)
 
     def WideAllNodes(self) -> tuple[BSTNode]:
         ''' Forms list of all tree nodes using breadth-first search. '''
         if self.Root is None:
             return tuple()
-        return self._BreadthAllNodes()
+        return self._BreadthAllNodes([], [self.Root])
 
-    def _InOrder(self, CurNode : BSTNode, Nodes : list[BSTNode]) -> tuple[BSTNode]:
+    def _InOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> tuple[BSTNode]:
         ''' In-order version of depth traversal. '''
         if CurNode.LeftChild is not None:
-            self._InOrder(CurNode.LeftChild, Nodes)
-        Nodes.append(CurNode)
+            self._InOrder(CurNode.LeftChild, ResultNodes)
+        ResultNodes.append(CurNode)
         if CurNode.RightChild is not None:
-            self._InOrder(CurNode.RightChild, Nodes)
+            self._InOrder(CurNode.RightChild, ResultNodes)
         if CurNode is self.Root:
-            return tuple(Nodes)
+            return tuple(ResultNodes)
 
-    def _PostOrder(self, CurNode : BSTNode, Nodes : list[BSTNode]) -> tuple[BSTNode]:
+    def _PostOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> tuple[BSTNode]:
         ''' Post-order version of depth traversal. '''
         if CurNode.LeftChild is not None:
-            self._PostOrder(CurNode.LeftChild, Nodes)
+            self._PostOrder(CurNode.LeftChild, ResultNodes)
         if CurNode.RightChild is not None:
-            self._InOrder(CurNode.RightChild, Nodes)
-        Nodes.append(CurNode)
+            self._InOrder(CurNode.RightChild, ResultNodes)
+        ResultNodes.append(CurNode)
         if CurNode is self.Root:
-            return tuple(Nodes)
+            return tuple(ResultNodes)
 
-    def _PreOrder(self, CurNode : BSTNode, Nodes : list[BSTNode]) -> tuple[BSTNode]:
+    def _PreOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> tuple[BSTNode]:
         ''' Pre-order version of depth traversal. '''
-        Nodes.append(CurNode)
+        ResultNodes.append(CurNode)
         if CurNode.LeftChild is not None:
-            self._PostOrder(CurNode.LeftChild, Nodes)
+            self._PostOrder(CurNode.LeftChild, ResultNodes)
         if CurNode.RightChild is not None:
-            self._InOrder(CurNode.RightChild, Nodes)
+            self._InOrder(CurNode.RightChild, ResultNodes)
         if CurNode is self.Root:
-            return tuple(Nodes)
+            return tuple(ResultNodes)
 
     def DeepAllNodes(self, search_order : int) -> tuple[BSTNode]:
         ''' Forms list of all tree nodes using deep-first search.
