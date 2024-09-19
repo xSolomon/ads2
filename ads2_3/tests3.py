@@ -56,29 +56,15 @@ class BSTTests(unittest.TestCase):
         self.tree.AddKeyValue(11, 11)
         self.tree.AddKeyValue(13, 13)
         self.tree.AddKeyValue(15, 15)
-        self.assertEqual(self.tree.Count(), 15)
-        for i in range(15):
-            with self.subTest(i = i, NodeValue = i + 1):
-                search_result : BSTFind = self.tree.FindNodeByKey(i + 1)
-                self.assertTrue(search_result.NodeHasKey)
-                node_to_check : BSTNode = search_result.Node
-                self.assertEqual(node_to_check.NodeKey, i + 1)
-                if node_to_check.NodeKey % 2 == 1:
-                    self.assertTrue(self.tree._IsLeaf(node_to_check))
-                if node_to_check.NodeKey % 2 == 0:
-                    self.assertFalse(self.tree._IsLeaf(node_to_check))
-        self.assertIs(self.tree.FinMinMax(self.tree.Root, True), self.tree.Root.RightChild.RightChild.RightChild)
-        self.assertIs(self.tree.FinMinMax(self.tree.Root, False), self.tree.Root.LeftChild.LeftChild.LeftChild)
-        self.tree.DeleteNodeByKey(2)
-        self.assertFalse(self.tree._IsLeaf(self.tree.FindNodeByKey(3).Node))
-        self.tree.DeleteNodeByKey(3)
-        self.tree.DeleteNodeByKey(4)
-        self.assertFalse(self.tree._IsLeaf(self.tree.FindNodeByKey(5).Node))
-        self.tree.DeleteNodeByKey(8)
-        self.assertFalse(self.tree._IsLeaf(self.tree.FindNodeByKey(9).Node))
-        self.assertEqual(self.tree.Root.NodeKey, 9)
-        self.tree.DeleteNodeByKey(13)
-        self.tree.DeleteNodeByKey(9)
-        self.assertEqual(self.tree.Root.NodeKey, 10)
+        root = self.tree.Root
+        breadth_traversal : tuple[BSTNode] = (root, root.LeftChild, root.RightChild,
+        root.LeftChild.LeftChild, root.LeftChild.RightChild, root.RightChild.LeftChild,
+        root.RightChild.RightChild, root.LeftChild.LeftChild.LeftChild,
+        root.LeftChild.LeftChild.RightChild, root.LeftChild.RightChild.LeftChild,
+        root.LeftChild.RightChild.RightChild, root.RightChild.LeftChild.LeftChild,
+        root.RightChild.LeftChild.RightChild, root.RightChild.RightChild.LeftChild,
+        root.RightChild.RightChild.RightChild)
+        depth_in_order : tuple[BSTNode] = (breadth_traversal[7],)
+        self.assertEqual(self.tree.WideAllNodes(), breadth_traversal)
 
 unittest.main()

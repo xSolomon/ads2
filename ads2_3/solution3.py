@@ -177,7 +177,7 @@ class BST:
         if CurNode.LeftChild is not None:
             self._PostOrder(CurNode.LeftChild, ResultNodes)
         if CurNode.RightChild is not None:
-            self._InOrder(CurNode.RightChild, ResultNodes)
+            self._PostOrder(CurNode.RightChild, ResultNodes)
         ResultNodes.append(CurNode)
         if CurNode is self.Root:
             return tuple(ResultNodes)
@@ -186,9 +186,9 @@ class BST:
         ''' Pre-order version of depth traversal. '''
         ResultNodes.append(CurNode)
         if CurNode.LeftChild is not None:
-            self._PostOrder(CurNode.LeftChild, ResultNodes)
+            self._PreOrder(CurNode.LeftChild, ResultNodes)
         if CurNode.RightChild is not None:
-            self._InOrder(CurNode.RightChild, ResultNodes)
+            self._PreOrder(CurNode.RightChild, ResultNodes)
         if CurNode is self.Root:
             return tuple(ResultNodes)
 
