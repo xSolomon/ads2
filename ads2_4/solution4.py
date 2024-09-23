@@ -14,23 +14,21 @@ class aBST:
             Returns key index * (-1) if no key found, but there is valid place for it.
             If no valid space, returns None. '''
         current_node_index : int = 0
-        for i in range(self.TreeDepth + 1):
-            if self.Tree[current_node_index] is None:
+        for _ in range(self.TreeDepth + 1):
+            if self.Tree[current_node_index] is None: # Reached empty node, can insert key here.
                 return -current_node_index
-            if self.Tree[current_node_index] == key:
+            if self.Tree[current_node_index] == key: # Found key.
                 return current_node_index
-            if self.Tree[current_node_index] > key:
-                current_node_index = 2 * current_node_index + 1
-                continue
-            current_node_index = 2 * current_node_index + 2
+            current_node_index = current_node_index * 2 + \
+                (1 if self.Tree[current_node_index] > key else 2)
         return None
 
     def AddKey(self, key) -> int:
         ''' Adds key in tree and return its index, -1 if failed adding. '''
         add_key_index : int | None = self.FindKeyIndex(key)
-        if add_key_index is None or add_key_index > 0:
+        if add_key_index is None or add_key_index > 0: # No space for key or key already exists.
             return -1
-        if add_key_index == 0 and self.Tree[0] is not None:
+        if add_key_index == 0 and self.Tree[0] is not None: # Root key that already exists.
             return -1
         add_key_index *= -1
         self.Tree[add_key_index] = key
