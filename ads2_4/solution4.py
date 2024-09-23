@@ -3,8 +3,7 @@
 class aBST:
     ''' Binary search tree via array. '''
     def __init__(self, depth : int):
-        if depth < 0:
-            depth = 0
+        depth = max(depth, 0)
         tree_size : int = pow(2, depth + 1) - 1
         self.TreeDepth : int = depth # Store depth to simplify work with tree.
         self.Tree = [None] * tree_size # Array of keys (tree modes).
@@ -20,7 +19,7 @@ class aBST:
             if self.Tree[current_node_index] == key: # Found key.
                 return current_node_index
             current_node_index = current_node_index * 2 + \
-                (1 if self.Tree[current_node_index] > key else 2)
+                (1 if self.Tree[current_node_index] > key else 2) # Choose left or right child.
         return None
 
     def AddKey(self, key) -> int:
