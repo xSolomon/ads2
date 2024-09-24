@@ -25,12 +25,13 @@ class aBST:
     def AddKey(self, key) -> int:
         ''' Adds key in tree and return its index, -1 if failed adding. '''
         add_key_index : int | None = self.FindKeyIndex(key)
-        if add_key_index is None or add_key_index > 0: # No space for key or key already exists.
+        if add_key_index is None: # No space for key.
             return -1
         if add_key_index == 0 and self.Tree[0] is not None: # Root key that already exists.
             return -1
-        add_key_index *= -1
-        self.Tree[add_key_index] = key
+        if add_key_index <= 0:
+            add_key_index *= -1
+            self.Tree[add_key_index] = key
         return add_key_index
 
 
