@@ -27,5 +27,6 @@ class aBSTTests(unittest.TestCase):
         for i, key in enumerate(values):
             with self.subTest(i = i, key = key, index = indexes[i]):
                 self.assertEqual(tree.FindKeyIndex(key), indexes[i])
+                self.assertEqual(tree.AddKey(key), indexes[i])
 
 unittest.main()

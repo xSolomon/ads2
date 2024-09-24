@@ -27,9 +27,7 @@ class aBST:
         add_key_index : int | None = self.FindKeyIndex(key)
         if add_key_index is None: # No space for key.
             return -1
-        if add_key_index == 0 and self.Tree[0] is not None: # Root key that already exists.
-            return -1
-        if add_key_index <= 0:
+        if add_key_index < 0 or (add_key_index == 0 and self.Tree[0] is None):
             add_key_index *= -1
             self.Tree[add_key_index] = key
         return add_key_index
