@@ -1,7 +1,7 @@
-''' Tests for lesson 2 Binary Search Tree methods. '''
+''' Tests for lesson 3 Binary Search Tree traversal methods. '''
 
 import unittest
-from solution3 import BSTNode, BSTFind, BST
+from solution3 import BSTNode, BST
 
 class BSTTests(unittest.TestCase):
     ''' Tests for BST depth and breadth traversals. '''
@@ -64,7 +64,6 @@ class BSTTests(unittest.TestCase):
         root.LeftChild.RightChild.RightChild, root.RightChild.LeftChild.LeftChild,
         root.RightChild.LeftChild.RightChild, root.RightChild.RightChild.LeftChild,
         root.RightChild.RightChild.RightChild)
-        depth_in_order : tuple[BSTNode] = (breadth_traversal[7],)
         self.assertEqual(self.tree.WideAllNodes(), breadth_traversal)
 
 unittest.main()
