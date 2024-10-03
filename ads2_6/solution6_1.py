@@ -20,10 +20,10 @@ class BalancedBST:
         middle_element_index : int = (left_border + right_border) // 2
         new_node : BSTNode = BSTNode(array[middle_element_index], root_node)
         new_node.Level = depth_level
-        new_node.LeftChild = self.GenerateBBST(new_node, array, left_border,
-            middle_element_index - 1, depth_level + 1)
-        new_node.RightChild = self.GenerateBBST(new_node, array, middle_element_index + 1,
+        new_node.LeftChild = self.GenerateBBST(new_node, array, middle_element_index + 1,
             right_border, depth_level + 1)
+        new_node.RightChild = self.GenerateBBST(new_node, array, left_border,
+            middle_element_index - 1, depth_level + 1)
         return new_node
 
     def GenerateTree(self, a : list) -> None:
