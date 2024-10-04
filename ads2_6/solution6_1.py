@@ -15,15 +15,17 @@ class BalancedBST:
         self.Root : BSTNode = None # Tree root.
 
     def GenerateBBST(self, root_node : BSTNode, array : list, left_border : int,
-        right_border : int, depth_level : int) -> BSTNode:
+        right_border : int, depth_level : int) -> BSTNode | None:
         ''' Given ascending sorted array, produce BBST from its elements. '''
+        if right_border < left_border:
+            return None
         middle_element_index : int = (left_border + right_border) // 2
         new_node : BSTNode = BSTNode(array[middle_element_index], root_node)
         new_node.Level = depth_level
-        new_node.LeftChild = self.GenerateBBST(new_node, array, middle_element_index + 1,
-            right_border, depth_level + 1)
-        new_node.RightChild = self.GenerateBBST(new_node, array, left_border,
+        new_node.LeftChild = self.GenerateBBST(new_node, array, left_border,
             middle_element_index - 1, depth_level + 1)
+        new_node.RightChild = self.GenerateBBST(new_node, array, middle_element_index + 1,
+            right_border, depth_level + 1)
         return new_node
 
     def GenerateTree(self, a : list) -> None:
