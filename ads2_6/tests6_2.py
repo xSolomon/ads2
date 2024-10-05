@@ -136,5 +136,34 @@ class BalancedBSTTests(unittest.TestCase):
                 self.assertFalse(self.tree.IsBalanced(nodes[0]))
                 self.unform_tree(nodes)
 
+    def test_on_predefined_fifteen_nodes_tree(self) -> None:
+        ''' Forms full tree of 3 depth level. Then, deletes root left subtree.
+            Tree must be unbalanced. '''
+        root_node_50 : BSTNode = BSTNode(50, None)
+        node_25 : BSTNode = BSTNode(25, None)
+        node_75 : BSTNode = BSTNode(75, None)
+        node_37 : BSTNode = BSTNode(37, None)
+        node_31 : BSTNode = BSTNode(31, None)
+        node_43 : BSTNode = BSTNode(43, None)
+        node_62 : BSTNode = BSTNode(62, None)
+        node_84 : BSTNode = BSTNode(84, None)
+        node_55 : BSTNode = BSTNode(55, None)
+        node_92 : BSTNode = BSTNode(92, None)
+
+        root_node_50.LeftChild = node_25
+        node_25.RightChild = node_37
+        node_37.LeftChild = node_31
+        node_37.RightChild = node_43
+        root_node_50.RightChild = node_75
+        node_75.LeftChild = node_62
+        node_62.LeftChild = node_55
+        node_75.RightChild = node_84
+        node_84.RightChild = node_92
+
+        self.assertFalse(self.tree.IsBalanced(root_node_50))
+        root_node_50.LeftChild = None
+        self.assertFalse(self.tree.IsBalanced(root_node_50))
+
+
 
 unittest.main()

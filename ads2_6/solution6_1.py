@@ -38,10 +38,10 @@ class BalancedBST:
         ''' Calculates tree height, writing value for each node. '''
         if root_node is None:
             return 0
-        left_height : int = self.CalculateTreeHeight(root_node.LeftChild)
-        right_height : int = self.CalculateTreeHeight(root_node.RightChild)
+        left_height : int = abs(self.CalculateTreeHeight(root_node.LeftChild))
+        right_height : int = abs(self.CalculateTreeHeight(root_node.RightChild))
         root_node.HeightDifference = left_height - right_height
-        return abs(root_node.HeightDifference) + 1
+        return max(left_height, right_height) + 1
 
     def IsTreeBalanced(self, root_node : BSTNode) -> bool:
         ''' Checks whether height of subtrees of given node differs less than 2. '''
