@@ -2,8 +2,8 @@
 
 class BSTNode:
     ''' Tree node with additional information about its depth level. '''
-    def __init__(self, key, parent):
-        self.NodeKey = key # Node key.
+    def __init__(self, key : int, parent):
+        self.NodeKey : int = key # Node key.
         self.Parent : BSTNode = parent # Parent node (None for root).
         self.LeftChild : BSTNode = None # Left child.
         self.RightChild : BSTNode = None # Right child.
@@ -29,19 +29,19 @@ class BalancedBST:
             right_border, depth_level + 1)
         return new_node
 
-    def GenerateTree(self, a : list) -> None:
+    def GenerateTree(self, a : list[int]) -> None:
         ''' Generates BBST from raw unsorted array. '''
         a.sort()
         self.Root = self.GenerateBBST(None, a, 0, len(a) - 1, 0)
 
-    def CalculateTreeHeight(self, root_node : BSTNode, is_left_child : bool) -> int:
-        ''' Calculates tree height, writing value for each node.  '''
+    def CalculateTreeHeight(self, root_node : BSTNode) -> int:
+        ''' Calculates tree height, writing value for each node. '''
         if root_node is None:
             return 0
-        left_height : int = self.CalculateTreeHeight(root_node.LeftChild, True)
-        right_height : int = self.CalculateTreeHeight(root_node.RightChild, False)
-        root_node.HeightDifference = left_height - abs(right_height)
-        return (abs(root_node.HeightDifference) + 1) * (1 if is_left_child else -1)
+        left_height : int = self.CalculateTreeHeight(root_node.LeftChild)
+        right_height : int = self.CalculateTreeHeight(root_node.RightChild)
+        root_node.HeightDifference = left_height - right_height
+        return abs(root_node.HeightDifference) + 1
 
     def IsTreeBalanced(self, root_node : BSTNode) -> bool:
         ''' Checks whether height of subtrees of given node differs less than 2. '''
@@ -56,9 +56,7 @@ class BalancedBST:
     def IsBalanced(self, root_node : BSTNode) -> bool:
         ''' Calculates height difference between subtrees of every node,
             then checks for balance. '''
-        self.CalculateTreeHeight(root_node, True)
+        self.CalculateTreeHeight(root_node)
         return self.IsTreeBalanced(root_node)
-
-
 
 
