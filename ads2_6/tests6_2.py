@@ -127,7 +127,6 @@ class BalancedBSTTests(unittest.TestCase):
             [[None, nodes[1]], [None, nodes[2]], [None, nodes[3]], [nodes[4], None]], # 37
             [[None, nodes[1]], [None, nodes[2]], [None, nodes[3]], [None, nodes[4]]]] # 38
 
-
         balanced_trees : list[int] = [15, 18, 19, 20, 21, 24]
         for i, tree_variant in enumerate(tree_variants):
             with self.subTest(test_number = i + 1):
