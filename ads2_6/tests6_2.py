@@ -82,7 +82,7 @@ class BalancedBSTTests(unittest.TestCase):
         # Most inner list represents two childs being None or other node.
         # Second inner list represents one of tree variants.
         tree_variants : list[list[list[BSTNode | None]]] = [
-            # Root has only left child cases:
+            # Root has only left child cases, no balanced variants:
             [[nodes[1], None], [nodes[2], None], [nodes[3], None], [nodes[4], None]], # 1
             [[nodes[1], None], [nodes[2], None], [nodes[3], None], [None, nodes[4]]], # 2
             [[nodes[1], None], [nodes[2], None], [None, nodes[3]], [nodes[4], None]], # 3
@@ -95,25 +95,24 @@ class BalancedBSTTests(unittest.TestCase):
             [[nodes[1], None], [None, nodes[2]], [nodes[3], None], [None, nodes[4]]], # 10
             [[nodes[1], None], [None, nodes[2]], [None, nodes[3]], [nodes[4], None]], # 11
             [[nodes[1], None], [None, nodes[2]], [None, nodes[3]], [None, nodes[4]]], # 12
-
-            # Root right subtree contains only one node:
+            # Root right subtree contains only one node, variant 15 is balanced:
             [[nodes[1], nodes[2]], [nodes[3], None], [None, None], [nodes[4], None]], # 13
             [[nodes[1], nodes[2]], [nodes[3], None], [None, None], [None, nodes[4]]], # 14
             [[nodes[1], nodes[2]], [nodes[3], nodes[4]], [None, None], [None, None]], # 15
             [[nodes[1], nodes[2]], [None, nodes[3]], [None, None], [nodes[4], None]], # 16
             [[nodes[1], nodes[2]], [None, nodes[3]], [None, None], [None, nodes[4]]], # 17
-            # Root left and right subtrees contains 2 nodes each:
+            # Root left and right subtrees contains 2 nodes each, all variants are balanced:
             [[nodes[1], nodes[2]], [nodes[3], None], [nodes[4], None], [None, None]], # 18
             [[nodes[1], nodes[2]], [nodes[3], None], [None, nodes[4]], [None, None]], # 19
             [[nodes[1], nodes[2]], [None, nodes[3]], [nodes[4], None], [None, None]], # 20
             [[nodes[1], nodes[2]], [None, nodes[3]], [None, nodes[4]], [None, None]], # 21
-            # Root left subtree sontains only one node:
+            # Root left subtree sontains only one node, variant 24 is balanced:
             [[nodes[1], nodes[2]], [None, None], [nodes[3], None], [nodes[4], None]], # 22
             [[nodes[1], nodes[2]], [None, None], [nodes[3], None], [None, nodes[4]]], # 23
             [[nodes[1], nodes[2]], [None, None], [nodes[3], nodes[4]], [None, None]], # 24
             [[nodes[1], nodes[2]], [None, None], [None, nodes[3]], [nodes[4], None]], # 25
             [[nodes[1], nodes[2]], [None, None], [None, nodes[3]], [None, nodes[4]]], # 26
-            # Root has only right child cases:
+            # Root has only right child cases, no balanced variants:
             [[None, nodes[1]], [nodes[2], None], [nodes[3], None], [nodes[4], None]], # 27
             [[None, nodes[1]], [nodes[2], None], [nodes[3], None], [None, nodes[4]]], # 28
             [[None, nodes[1]], [nodes[2], None], [None, nodes[3]], [nodes[4], None]], # 29
