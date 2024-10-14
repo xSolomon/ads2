@@ -10,7 +10,7 @@ class Heap:
     def MakeHeap(self, a : list[int], depth : int) -> None:
         ''' Makes heap from given array by calling Add for each element. '''
         self.heap_depth = depth
-        self.HeapArray = [None] * pow(depth + 1, 2)
+        self.HeapArray = [None] * pow(2, depth + 1) - 1
         for _, key in enumerate(a):
             self.Add(key)
         self.first_free_index = len(a)
