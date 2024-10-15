@@ -26,7 +26,7 @@ class Heap:
         if self.first_free_index == 0: # Deleted last element in heap.
             return deleted_key
         current_index : int = 0
-        for _ in range(self.heap_depth + 1):
+        for _ in range(self.heap_depth):
             left_child_index : int = 2 * current_index + 1
             right_child_index : int = 2 * current_index + 2
             left_value : int = -1 if self.HeapArray[left_child_index] is None \
