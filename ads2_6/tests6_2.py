@@ -13,52 +13,63 @@ class BalancedBSTTests(unittest.TestCase):
         ''' Aftertest cleanup. '''
         del self.tree
 
-    def test_balance_of_empty_tree(self) -> None:
-        ''' Tree without nodes should count as balanced. '''
+    def test_on_empty_tree(self) -> None:
+        ''' Tree without nodes should count as balanced BST. '''
+        self.assertTrue(self.tree.IsBST(self.tree.Root))
         self.assertTrue(self.tree.IsBalanced(None))
 
-    def test_balance_of_single_node_tree(self) -> None:
+    def test_on_single_node_tree(self) -> None:
         ''' Tree with only root node is always balanced. '''
         self.tree.GenerateTree([5])
+        self.assertTrue(self.tree.IsBST(self.tree.Root))
         self.assertTrue(self.tree.IsBalanced(self.tree.Root))
 
-    def test_balance_of_two_node_tree(self) -> None:
+    def test_on_two_node_tree(self) -> None:
         ''' Tree must be balanced independent of child node being left or right child. '''
         root_node : BSTNode = BSTNode(10, None)
         left_child : BSTNode = BSTNode(5, root_node)
         right_child : BSTNode = BSTNode(15, root_node)
+        self.assertTrue(self.tree.IsBST(root_node))
 
         root_node.LeftChild = left_child
-        self.assertTrue(self.tree.IsBalanced(self.tree.Root))
+        self.assertTrue(self.tree.IsBST(root_node))
+        self.assertTrue(self.tree.IsBalanced(root_node))
 
         root_node.LeftChild = None
         root_node.RightChild = right_child
-        self.assertTrue(self.tree.IsBalanced(self.tree.Root))
+        self.assertTrue(self.tree.IsBST(root_node))
+        self.assertTrue(self.tree.IsBalanced(root_node))
 
-    def test_balance_on_three_node_tree(self) -> None:
+    def test_on_three_node_tree(self) -> None:
         ''' The only case of balanced tree is when it is root with exactly two childs. '''
         root_node : BSTNode = BSTNode(10, None)
         first_child : BSTNode = BSTNode(5, None)
         second_child : BSTNode = BSTNode(15, None)
+        self.assertTrue(self.tree.IsBST(root_node))
 
         root_node.LeftChild = first_child
         first_child.LeftChild = second_child
+        self.assertFalse(self.tree.IsBST(root_node))
         self.assertFalse(self.tree.IsBalanced(root_node))
 
         first_child.LeftChild = None
         first_child.RightChild = second_child
+        self.assertTrue(self.tree.IsBST(root_node))
         self.assertFalse(self.tree.IsBalanced(root_node))
 
         first_child.RightChild = None
         root_node.RightChild = second_child
+        self.assertTrue(self.tree.IsBST(root_node))
         self.assertTrue(self.tree.IsBalanced(root_node))
 
         root_node.LeftChild = None
         second_child.LeftChild = first_child
+        self.assertTrue(self.tree.IsBST(root_node))
         self.assertFalse(self.tree.IsBalanced(root_node))
 
         second_child.LeftChild = None
         second_child.RightChild = first_child
+        self.assertFalse(self.tree.IsBST(root_node))
         self.assertFalse(self.tree.IsBalanced(root_node))
 
     def unform_tree(self, tree_nodes : list[BSTNode]) -> None:
@@ -161,8 +172,10 @@ class BalancedBSTTests(unittest.TestCase):
         node_84.RightChild = node_92
 
         self.assertFalse(self.tree.IsBalanced(root_node_50))
+        self.assertTrue(self.tree.IsBST(root_node_50))
         root_node_50.LeftChild = None
         self.assertFalse(self.tree.IsBalanced(root_node_50))
+        self.assertTrue(self.tree.IsBST(root_node_50))
 
 
 

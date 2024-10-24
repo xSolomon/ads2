@@ -33,6 +33,7 @@ class BalancedBST:
         ''' Generates BBST from raw unsorted array. '''
         a.sort()
         self.Root = self.GenerateBBST(None, a, 0, len(a) - 1, 0)
+        self.CalculateTreeHeight(self.Root)
 
     def CalculateTreeHeight(self, root_node : BSTNode) -> int:
         ''' Calculates tree height, writing value for each node. '''
@@ -43,8 +44,20 @@ class BalancedBST:
         root_node.HeightDifference = left_height - right_height
         return max(left_height, right_height) + 1
 
+    def IsBST(self, root_node : BSTNode) -> bool:
+        ''' Checks whether tree with given root is Binary Search Tree. '''
+        if root_node is None:
+            return True
+        if root_node.LeftChild is not None and \
+            root_node.LeftChild.NodeKey >= root_node.NodeKey:
+            return False
+        if root_node.RightChild is not None and \
+            root_node.RightChild.NodeKey < root_node.NodeKey:
+            return False
+        return self.IsBST(root_node.LeftChild) and self.IsBST(root_node.RightChild)
+
     def IsTreeBalanced(self, root_node : BSTNode) -> bool:
-        ''' Checks whether height of subtrees of given node differs less than 2. '''
+        ''' Checks if height difference of subtrees is less than one. '''
         if root_node is None:
             return True
         if not self.IsTreeBalanced(root_node.LeftChild):
@@ -58,5 +71,7 @@ class BalancedBST:
             then checks for balance. '''
         self.CalculateTreeHeight(root_node)
         return self.IsTreeBalanced(root_node)
+
+
 
 
