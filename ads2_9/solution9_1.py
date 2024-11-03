@@ -128,7 +128,6 @@ class SimpleTree:
             IsEvenTree = not IsEvenTree
         return IsEvenTree
 
-
     def EvenTrees(self) -> list:
         ''' Returns list of nodes for which vertex must be cut
             to form maximum number of even trees. '''
