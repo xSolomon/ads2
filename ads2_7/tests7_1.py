@@ -7,7 +7,7 @@ class HeapTests(unittest.TestCase):
     ''' Tests for MakeHeap, Add, GetMax functions. '''
     def setUp(self) -> None:
         ''' Test preparations. '''
-        self.heap = Heap()
+        self.heap : Heap = Heap()
 
     def tearDown(self) -> None:
         ''' Aftertest cleanup. '''
