@@ -47,11 +47,15 @@ class HeapTests(unittest.TestCase):
         ''' For each tree, result must be the same as in the result list. '''
         trees : list[list[tuple]] = [
             [(None, 1), (1, 2), (2, 5), (2, 7)],
-            [(None, 1), (1, 2), (1, 3), (1, 6), (2, 5), (2, 7), (3, 4), (6, 8), (8, 9), (8, 10)]
+            [(None, 1), (1, 6), (6, 8), (8, 9), (8, 10)],
+            [(None, 1), (1, 2), (1, 3), (1, 6), (2, 5), (2, 7), (3, 4), (6, 8), (8, 9), (8, 10)],
+            [(None, 1), (1, 2), (1, 3), (1, 6), (2, 5), (2, 7), (3, 4), (6, 8), (8, 9), (8, 10), (5, 11), (11, 12), (12, 13), (13, 14)],
         ]
         results : list[list[int]] = [
             [],
-            [1, 3, 1, 6]
+            [1, 6],
+            [1, 3, 1, 6],
+            [12, 13, 5, 11, 1, 3, 1, 6]
         ]
         for i, tree in enumerate(trees):
             self.form_tree(tree)

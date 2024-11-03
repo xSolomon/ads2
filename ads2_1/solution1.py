@@ -26,7 +26,6 @@ class SimpleTree:
             self.Root.Parent = NewChild
             self.Root = NewChild
             return
-
         NewChild.Parent = ParentNode
         ParentNode.Children.append(NewChild)
 
