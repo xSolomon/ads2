@@ -116,23 +116,23 @@ class SimpleTree:
         self._WriteNodeLevels(self.Root, 0)
 
     def _FormEdgesToCut(self, ParentNode : SimpleTreeNode, IsEvenTree : bool,
-        VertecesBeingCut : list) -> bool:
+        VertecesBeingCut : list[SimpleTreeNode]) -> bool:
         ''' Recursively checks if subtree contains an even number of nodes
             (and, thus, vertex can be cut). '''
         for child in ParentNode.Children:
             if self._FormEdgesToCut(child, False, VertecesBeingCut):
-                VertecesBeingCut.append(ParentNode.NodeValue)
-                VertecesBeingCut.append(child.NodeValue)
+                VertecesBeingCut.append(ParentNode)
+                VertecesBeingCut.append(child)
                 continue
             IsEvenTree = not IsEvenTree
         return IsEvenTree
 
-    def EvenTrees(self) -> list:
+    def EvenTrees(self) -> list[SimpleTreeNode]:
         ''' Returns list of nodes for which vertex must be cut
             to form maximum number of even trees. '''
         if self.Root is None:
             return []
-        result : list = []
+        result : list[SimpleTreeNode] = []
         self._FormEdgesToCut(self.Root, False, result)
         return result
 
