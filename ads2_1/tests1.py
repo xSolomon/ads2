@@ -1,8 +1,6 @@
 ''' Tests for lesson 1 Simple Tree methods. '''
 
 import unittest
-from random import randint, sample
-from parametrize import parametrize
 from solution1 import SimpleTreeNode, SimpleTree
 
 class SimpleTreeTests(unittest.TestCase):

@@ -131,6 +131,8 @@ class SimpleTree:
     def EvenTrees(self) -> list:
         ''' Returns list of nodes for which vertex must be cut
             to form maximum number of even trees. '''
+        if self.Root is None:
+            return []
         result : list = []
         self.FormEdgesToCut(self.Root, False, result)
         return result
