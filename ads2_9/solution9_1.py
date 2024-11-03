@@ -116,7 +116,8 @@ class SimpleTree:
             return
         self._WriteNodeLevels(self.Root, 0)
 
-    def FormEdgesToCut(self, ParentNode : SimpleTreeNode, IsEvenTree : bool, VertecesBeingCut : list) -> bool:
+    def FormEdgesToCut(self, ParentNode : SimpleTreeNode, IsEvenTree : bool,
+        VertecesBeingCut : list) -> bool:
         ''' Recursively checks if subtree contains an even number of nodes
             (and, thus, vertex can be cut). '''
         for child in ParentNode.Children:
@@ -136,17 +137,7 @@ class SimpleTree:
         return result
 
 
-a = SimpleTree(SimpleTreeNode(1, None))
-a.AddChild(a.Root, SimpleTreeNode(2, a.Root))
-a.AddChild(a.Root.Children[0], SimpleTreeNode(5, a.Root.Children[0]))
-a.AddChild(a.Root.Children[0], SimpleTreeNode(7, a.Root.Children[0]))
-a.AddChild(a.Root, SimpleTreeNode(3, a.Root))
-a.AddChild(a.Root.Children[1], SimpleTreeNode(4, a.Root.Children[1]))
-a.AddChild(a.Root, SimpleTreeNode(6, a.Root))
-a.AddChild(a.Root.Children[2], SimpleTreeNode(8, a.Root.Children[2]))
-a.AddChild(a.Root.Children[2].Children[0], SimpleTreeNode(9, a.Root.Children[2].Children[0]))
-a.AddChild(a.Root.Children[2].Children[0], SimpleTreeNode(10, a.Root.Children[2].Children[0]))
-print(a.EvenTrees())
+
 
 
 
