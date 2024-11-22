@@ -45,11 +45,11 @@ class LinkedList:
         list_len : int = self._len
         return list_len
 
-    def get_head(self) -> Node | Node:
+    def get_head(self) -> Node | None:
         ''' Returns current head. '''
         return self._head.next if self._head.next is not self._head else None
 
-    def get_tail(self) -> Node | Node:
+    def get_tail(self) -> Node | None:
         ''' Returns current head. '''
         return self._head.prev if self._head.prev is not self._head else None
 
