@@ -269,7 +269,7 @@ class SimpleGraph:
                 continue
             if vertex.Hit:
                 continue
-            for second_vertex_index in range(first_vertex_index + 1, len(self.vertex)):
+            for second_vertex_index, _ in enumerate(self.vertex):
                 if first_vertex_index == second_vertex_index:
                     continue
                 if not self.IsEdge(first_vertex_index, second_vertex_index):

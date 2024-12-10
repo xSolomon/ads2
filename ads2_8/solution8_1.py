@@ -4,7 +4,7 @@ class Vertex:
     ''' Wrapper for raw value. '''
     def __init__(self, val : int):
         self.Value : int = val # Vertex value/weight.
-  
+
 class SimpleGraph:
     ''' Represented via adjacency matrix and vertex list. '''
     def __init__(self, size : int):
