@@ -1,4 +1,4 @@
-''' Lesson 11 task 1 solution. '''
+''' Lesson 12 task 1 solution. '''
 
 class NodeBase:
     ''' Base Node, contains no data. '''
@@ -217,7 +217,7 @@ class SimpleGraph:
         self.m_adjacency[v2][v1] = 0
 
     def DFS(self, VFrom : int, VTo : int, current_path : list[int]) -> list[int]:
-        ''' Uses stack representing path between verteces. '''
+        ''' Uses stack representing path between vertices. '''
         self.vertex[VFrom].Hit = True
         current_path.append(VFrom)
         while current_path:
@@ -232,7 +232,7 @@ class SimpleGraph:
         return current_path
 
     def DepthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
-        ''' Finds path between verteces in graph using depth-first method. '''
+        ''' Finds path between vertices in graph using depth-first method. '''
         for vertex in self.vertex:
             if vertex:
                 vertex.Hit = False
@@ -240,7 +240,7 @@ class SimpleGraph:
         return [self.vertex[vertex_index] for vertex_index in result_path]
 
     def BreadthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
-        ''' Finds path between verteces in grapgh using breadth-first method. '''
+        ''' Finds path between vertices in grapgh using breadth-first method. '''
         for vertex in self.vertex: # Marking all verteces as not visited.
             if vertex:
                 vertex.Hit = False
@@ -258,6 +258,36 @@ class SimpleGraph:
                     vertex.Hit = True
                     vertex_queue.enqueue((vertex_index, path_to_node + [vertex_index]))
         return [] # No path found.
+
+    def WeakVertices(self) -> list[Vertex]:
+        ''' Finds all vertices that are not in any triangle. '''
+        for vertex in self.vertex:
+            if vertex:
+                vertex.Hit = False
+        for first_vertex_index, vertex in enumerate(self.vertex):
+            if not vertex:
+                continue
+            if vertex.Hit:
+                continue
+            for second_vertex_index in range(first_vertex_index + 1, len(self.vertex)):
+                if first_vertex_index == second_vertex_index:
+                    continue
+                if not self.IsEdge(first_vertex_index, second_vertex_index):
+                    continue
+                for third_vertex_index in range(second_vertex_index + 1, len(self.vertex)):
+                    if self.IsEdge(first_vertex_index, third_vertex_index) and \
+                    self.IsEdge(second_vertex_index, third_vertex_index):
+                        self.vertex[first_vertex_index].Hit = True
+                        self.vertex[second_vertex_index].Hit = True
+                        self.vertex[third_vertex_index].Hit = True
+                        break
+        weak_vertices : list[Vertex] = []
+        for vertex in self.vertex:
+            if not vertex:
+                continue
+            if not vertex.Hit:
+                weak_vertices.append(vertex)
+        return weak_vertices
 
 
 
