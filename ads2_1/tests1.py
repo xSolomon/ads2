@@ -66,7 +66,7 @@ class SimpleTreeTests(unittest.TestCase):
         self.assertEqual(test_tree.Count(), 2)
         self.assertEqual(test_tree.LeafCount(), 1)
         self.assertEqual(test_tree.GetAllNodes(), [first_node, second_node])
-        
+
 
     def test_inserting_in_empty_tree(self) -> None:
         ''' Expected nodes count = 1 and inserted node to be new root. '''
@@ -190,5 +190,28 @@ class SimpleTreeTests(unittest.TestCase):
         test_search : list[SimpleTreeNode] = [first_node, second_node, fourth_node, fifth_node,
         seventh_node, eighth_node, third_node, sixth_node, ninth_node]
         self.assertEqual(self.tree.FindNodesByValue(111), test_search)
+
+    def test_symmetry_on_empty_tree(self) -> None:
+        ''' Empty tree is symmetric. '''
+        self.assertTrue(self.tree.is_symmetric())
+
+    def test_symmetry_on_one_node_tree(self) -> None:
+        ''' Tree with only root node is symmetric. '''
+        self.tree.AddChild(None, SimpleTreeNode(111, None))
+        self.assertTrue(self.tree.is_symmetric())
+
+    def test_symmetry_on_three_node_trees(self) -> None:
+        ''' Only the tree with non-equal keys on root children is not symmetric. '''
+        trees : list[SimpleTree] = [SimpleTree(None) for _ in range(3)]
+        for tree in trees:
+            tree.AddChild(None, SimpleTreeNode(123, None))
+            tree.AddChild(tree.Root, SimpleTreeNode(456, tree.Root))
+        trees[0].AddChild(trees[0].Root.Children[0], SimpleTreeNode(789, trees[0].Root.Children[0])) # List-like variant.
+        trees[1].AddChild(trees[1].Root, SimpleTreeNode(789, trees[1].Root)) # Second root child with different key.
+        trees[2].AddChild(trees[2].Root, SimpleTreeNode(456, trees[2].Root)) # Second root child with equal key.
+        results : list[bool] = [True, False, True]
+        for i, tree in enumerate(trees):
+            with self.subTest(i = i):
+                self.assertEqual(results[i], tree.is_symmetric())
 
 unittest.main()

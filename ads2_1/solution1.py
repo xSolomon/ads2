@@ -115,7 +115,30 @@ class SimpleTree:
             return
         self._WriteNodeLevels(self.Root, 0)
 
-
+    def is_symmetric(self) -> bool:
+        ''' Check whether tree is symmetric about the root. '''
+        if not self.Root:
+            return True
+        left_subtree : list[SimpleTreeNode] = [self.Root]
+        right_subtree : list[SimpleTreeNode] = [self.Root]
+        while left_subtree:
+            if len(left_subtree) != len(right_subtree):
+                return False
+            left_node : SimpleTreeNode = left_subtree.pop()
+            right_node : SimpleTreeNode = right_subtree.pop()
+            if left_node is right_node:
+                childen_number : int = len(left_node.Children)
+                middle_children_index : int = childen_number // 2
+                left_border : int = middle_children_index + childen_number % 2
+                right_border : int = middle_children_index - childen_number % 2
+                left_subtree.extend(left_node.Children[:left_border])
+                right_subtree.extend(left_node.Children[childen_number:right_border - 1:-1])
+                continue
+            if left_node.NodeValue != right_node.NodeValue:
+                return False
+            left_subtree.extend(left_node.Children)
+            right_subtree.extend(reversed(right_node.Children))
+        return True
 
 
 
