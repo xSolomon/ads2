@@ -29,4 +29,6 @@ class aBSTTests(unittest.TestCase):
                 self.assertEqual(tree.FindKeyIndex(key), indexes[i])
                 self.assertEqual(tree.AddKey(key), indexes[i])
 
+
+
 unittest.main()

@@ -1,5 +1,7 @@
 ''' Solution for lesson 2. '''
 
+from typing import Tuple
+
 class BSTNode:
     ''' Value can be distinct with key if needed. '''
     def __init__(self, key, val, parent) -> None:
@@ -140,6 +142,58 @@ class BST:
     def Count(self) -> int:
         ''' Returns current nodes number in the tree. '''
         return self.NodesCount
+
+    def _all_paths_with_length(self, from_node : BSTNode, path_length : int,
+        current_path : list[BSTNode], found_paths : list[list[BSTNode]]) -> list[list[BSTNode]]:
+        ''' Finds all paths from given node to leaves with given length. '''
+        if from_node is None:
+            return found_paths
+        current_path.append(from_node)
+        if path_length == 0 and self._IsLeaf(from_node):
+            found_paths.append(current_path.copy())
+            current_path.pop()
+            return found_paths
+        found_paths.extend(self._all_paths_with_length(
+            from_node.LeftChild, path_length - 1, current_path, []))
+        found_paths.extend(self._all_paths_with_length(
+            from_node.RightChild, path_length - 1, current_path, []))
+        current_path.pop()
+        return found_paths
+
+    def root_to_leaf_paths(self, path_length : int) -> list[list[BSTNode]]:
+        ''' Finds all paths from root to leaves which have given length. '''
+        if path_length < 0:
+            return []
+        return self._all_paths_with_length(self.Root, path_length - 1, [], [])
+
+    def _all_paths_with_max_sum(self, from_node: BSTNode, highest_sum : int,
+        current_path : list[BSTNode]) \
+            -> Tuple[int, list[list[BSTNode]]]:
+        ''' Uses dfs method. '''
+        if from_node is None:
+            return (highest_sum, current_path.copy())
+        current_path.append(from_node)
+        if self._IsLeaf(from_node):
+            result : Tuple(int, list[list[BSTNode]]) = (highest_sum +from_node.NodeValue, [current_path.copy()])
+            current_path.pop()
+            return result
+        left_subtree_paths : Tuple[int, list[list[BSTNode]]] = self._all_paths_with_max_sum(
+            from_node.LeftChild, highest_sum + from_node.NodeValue, current_path)
+        right_subtree_paths : Tuple[int, list[list[BSTNode]]] = self._all_paths_with_max_sum(
+            from_node.RightChild, highest_sum + from_node.NodeValue, current_path)
+        current_path.pop()
+        if left_subtree_paths[0] == right_subtree_paths[0]:
+            left_subtree_paths[1].extend(right_subtree_paths[1])
+        return left_subtree_paths if left_subtree_paths[0] >= right_subtree_paths[0] \
+            else right_subtree_paths
+
+    def paths_with_max_sum(self) -> Tuple[int, list[list[BSTNode]]]:
+        ''' Finds all paths from root to leaf with maximum sum. '''
+        if not self.Root:
+            return (None, [])
+        return self._all_paths_with_max_sum(self.Root, 0, [])
+
+
 
 
 
