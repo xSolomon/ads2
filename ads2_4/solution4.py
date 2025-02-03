@@ -32,7 +32,9 @@ class aBST:
             self.Tree[add_key_index] = key
         return add_key_index
 
-
+    def lca(self) ->
+        ''' '''
+        return
 
 
 

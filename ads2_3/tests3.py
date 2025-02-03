@@ -17,14 +17,14 @@ class BSTTests(unittest.TestCase):
         self.assertIsNone(self.tree.Root)
         del self.tree
 
-    def test_on_empty_tree(self) -> None:
+    def test_traversals_on_empty_tree(self) -> None:
         ''' Expected each traversal to return empty tuple. '''
         self.assertEqual(self.tree.DeepAllNodes(0), ())
         self.assertEqual(self.tree.DeepAllNodes(1), ())
         self.assertEqual(self.tree.DeepAllNodes(2), ())
         self.assertEqual(self.tree.WideAllNodes(), ())
 
-    def test_on_small_predefined_tree(self) -> None:
+    def test_traversals_on_three_node_tree(self) -> None:
         ''' Test functions on tree with three nodes (root with two childs).
             Root = 8, left child = 4, right child = 12. '''
         self.assertTrue(self.tree.AddKeyValue(8, 8))
@@ -39,7 +39,7 @@ class BSTTests(unittest.TestCase):
         self.assertEqual(self.tree.WideAllNodes(),
             (self.tree.Root, self.tree.Root.LeftChild, self.tree.Root.RightChild))
 
-    def test_on_medium_predefined_tree(self) -> None:
+    def test_traversals_on_fifteen_node_tree(self) -> None:
         ''' Test on tree with 15 nodes total (with keys from 1 to 15). '''
         self.tree.AddKeyValue(8, 8)
         self.tree.AddKeyValue(4, 4)
@@ -65,5 +65,45 @@ class BSTTests(unittest.TestCase):
         root.RightChild.LeftChild.RightChild, root.RightChild.RightChild.LeftChild,
         root.RightChild.RightChild.RightChild)
         self.assertEqual(self.tree.WideAllNodes(), breadth_traversal)
+
+    def test_inverse_on_empty_tree(self) -> None:
+        ''' Expected nothing changes. '''
+        #inverseBST(self.tree)
+        self.tree.inverse_tree()
+        self.assertEqual(self.tree.Count(), 0)
+        self.assertIsNone(self.tree.Root)
+
+    def test_on_small_predefined_tree(self) -> None:
+        ''' Test functions on tree with three nodes (root with two childs).
+            Root = 8, left child = 4, right child = 12. '''
+        self.assertTrue(self.tree.AddKeyValue(8, 8))
+        self.assertTrue(self.tree.AddKeyValue(4, 4))
+        self.assertTrue(self.tree.AddKeyValue(12, 12))
+        tree_before_inverse : tuple[BSTNode] = self.tree.DeepAllNodes(0)
+        self.tree.inverse_tree()
+        self.assertEqual(self.tree.Count(), 3)
+        self.assertEqual([node.NodeValue for node in self.tree.DeepAllNodes(0)], [node.NodeValue for node in tree_before_inverse[::-1]])
+
+    def test_on_medium_predefined_tree(self) -> None:
+        ''' Test on tree with 15 nodes total (with keys from 1 to 15) '''
+        self.tree.AddKeyValue(8, 8)
+        self.tree.AddKeyValue(4, 4)
+        self.tree.AddKeyValue(12, 12)
+        self.tree.AddKeyValue(2, 2)
+        self.tree.AddKeyValue(6, 6)
+        self.tree.AddKeyValue(10, 10)
+        self.tree.AddKeyValue(14, 14)
+        self.tree.AddKeyValue(1, 1)
+        self.tree.AddKeyValue(3, 3)
+        self.tree.AddKeyValue(5, 5)
+        self.tree.AddKeyValue(7, 7)
+        self.tree.AddKeyValue(9, 9)
+        self.tree.AddKeyValue(11, 11)
+        self.tree.AddKeyValue(13, 13)
+        self.tree.AddKeyValue(15, 15)
+        tree_before_inverse : tuple[BSTNode] = self.tree.DeepAllNodes(0)
+        self.tree.inverse_tree()
+        self.assertEqual(self.tree.Count(), 15)
+        self.assertEqual([node.NodeValue for node in self.tree.DeepAllNodes(0)], [node.NodeValue for node in tree_before_inverse[::-1]])
 
 unittest.main()
