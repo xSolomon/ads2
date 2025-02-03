@@ -25,6 +25,7 @@ class BSTTests(unittest.TestCase):
             self.tree.AddKeyValue(value, value)
 
     def insert_values_in_tree(self, tree : BST, values : list[int]) -> None:
+        ''' Adds values to the given tree one-by-one. Assumes key is the same as value. '''
         for value in values:
             tree.AddKeyValue(value, value)
 

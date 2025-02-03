@@ -25,6 +25,11 @@ class BST:
         self.Root = node # Tree root, can be None.
         self.NodesCount : int = 0 if self.Root is None else 1 # Total nodes in the tree.
 
+    def _delete_tree(self) -> None:
+        ''' Deletes tree by simply removing all references from local variables. '''
+        self.Root = None
+        self.NodesCount = 0
+
     def _IsLeaf(self, Node : BSTNode) -> bool:
         ''' Checks whether provided node has any childs. '''
         return Node.LeftChild is None and Node.RightChild is None
@@ -227,6 +232,61 @@ class BST:
         if not self.Root:
             return None
         return self._inverse_bst(deque([self.Root]))
-        
+
+    def _max_level_sum_from(self, current_level : int, level_with_max_sum : int,
+        max_sum : int, nodes_on_current_level : list[BSTNode]) -> int:
+        if not nodes_on_current_level:
+            return level_with_max_sum
+        nodes_on_next_level : list[BSTNode] = []
+        current_level_sum : int = 0
+        for current_node in nodes_on_current_level:
+            current_level_sum += current_node.NodeValue
+            if current_node.LeftChild:
+                nodes_on_next_level.append(current_node.LeftChild)
+            if current_node.RightChild:
+                nodes_on_next_level.append(current_node.RightChild)
+        if current_level_sum > max_sum:
+            max_sum = current_level_sum
+            level_with_max_sum = current_level
+        return self._max_level_sum_from(current_level + 1,
+            level_with_max_sum, max_sum, nodes_on_next_level)
 
 
+    def level_with_max_sum(self) -> int:
+        ''' Finds level which has maximum sum of node values. '''
+        if not self.Root:
+            return None
+        return self._max_level_sum_from(1, 1, 0, [self.Root])
+
+    def _restore_tree(self, parent_node : BSTNode,
+        infix_traversal : list[int], infix_left_border : int, infix_right_border : int,
+        prefix_traversal : list[int], prefix_left_border : int, prefix_right_border : int) -> BSTNode:
+        ''' Uses borders to determine subtrees in each list. '''
+        if infix_left_border > infix_right_border:
+            return None
+        root : BSTNode = BSTNode(
+            prefix_traversal[prefix_left_border], prefix_traversal[prefix_left_border], parent_node)
+        self.NodesCount += 1
+        root_index_infix : int = None
+        for i in range(infix_left_border, infix_right_border + 1):
+            if infix_traversal[i] == root.NodeValue:
+                root_index_infix = i
+                break
+        left_subtree_size : int = root_index_infix - infix_left_border
+        # Form left subtree.
+        root.LeftChild = self._restore_tree(root,
+            infix_traversal, infix_left_border, root_index_infix - 1,
+            prefix_traversal, prefix_left_border + 1, prefix_left_border + left_subtree_size)
+        # Form right subtree.
+        root.RightChild = self._restore_tree(root,
+            infix_traversal, root_index_infix + 1, infix_right_border,
+            prefix_traversal, prefix_left_border + left_subtree_size + 1, prefix_right_border)
+        return root
+
+    def recover_binary_tree(self,
+        infix_traversal : list[BSTNode], prefix_traversal : list[BSTNode]) -> Self:
+        ''' Rebuild tree from two arrays representing different traversal orders. '''
+        self._delete_tree()
+        self.Root = self._restore_tree(None, infix_traversal, 0, len(infix_traversal) - 1,
+            prefix_traversal, 0, len(prefix_traversal) - 1)
+        return self
