@@ -1,5 +1,8 @@
 ''' Lesson 7 tasks 1-3 solution. '''
 
+from typing import Self
+from queue import Queue
+
 class Heap:
     ''' Binary heap. '''
     def __init__(self):
@@ -16,8 +19,8 @@ class Heap:
         self.first_free_index = len(a)
 
     def GetMax(self) -> int:
-        ''' Return value contained in rood, rebuilding heap via sift down. '''
-        if self.first_free_index == 0: # Heap is empty.
+        ''' Return value contained in root, rebuilding heap via sift down. '''
+        if self.size() == 0: # Heap is empty.
             return -1
         deleted_key : int = self.HeapArray[0]
         self.HeapArray[0] = self.HeapArray[self.first_free_index - 1]
@@ -47,6 +50,8 @@ class Heap:
             Returns false if heap is full. '''
         if self.first_free_index == len(self.HeapArray): # Heap if full.
             return False
+        if key < 0: # Only non-negative keys are valid.
+            return False
         self.HeapArray[self.first_free_index] = key
         current_index : int = self.first_free_index
         self.first_free_index += 1
@@ -59,7 +64,69 @@ class Heap:
             current_index = parent_index
         return True
 
+    def is_correct(self) -> bool:
+        ''' Returns True if heap is correct (parent key is greater-equal than children keys). '''
+        for node_index, parent_key in enumerate(self.HeapArray):
+            if parent_key is None:
+                continue
+            left_child_index : int = node_index * 2 + 1
+            if left_child_index < len(self.HeapArray) and \
+                self.HeapArray[left_child_index] is not None and \
+                parent_key < self.HeapArray[left_child_index]:
+                return False
+            right_child_index : int = node_index * 2 + 2
+            if right_child_index < len(self.HeapArray) and \
+                self.HeapArray[right_child_index] is not None and \
+                parent_key < self.HeapArray[right_child_index]:
+                return False
+        return True
 
+    def find_max_in_range(self, min_val : int, max_val : int) -> int:
+        ''' Search for maximum value in range [min, max].
+            Returns -1 if no such element. '''
+        current_max : int = -1
+        index_queue : Queue = Queue()
+        index_queue.put(0)
+        while not index_queue.empty():
+            current_index : int = index_queue.get()
+            if current_index >= self.size(): # Index out of heap range.
+                continue
+            if self.HeapArray[current_index] > max_val: # Not reached search range, continue.
+                index_doubled : int = current_index * 2
+                index_queue.put(index_doubled + 1)
+                index_queue.put(index_doubled + 2)
+                continue
+            if self.HeapArray[current_index] < min_val: # Passed search range.
+                continue
+            current_max = max(current_max, self.HeapArray[current_index])
+        return current_max
 
+    def size(self) -> int:
+        ''' Returns number of keys stored. '''
+        return self.first_free_index
 
-
+    def merge_heap(self, other_heap : Self) -> Self:
+        ''' Merges heap with other using only public interface. '''
+        new_heap : Heap = Heap()
+        total_elements : int = self.size() + other_heap.size()
+        new_heap_depth : int = 0
+        max_elements_with_depth : int = 1
+        while max_elements_with_depth < total_elements: # Calculate depth of new heap.
+            max_elements_with_depth = max_elements_with_depth * 2 + 1
+            new_heap_depth += 1
+        new_heap.MakeHeap([], new_heap_depth)
+        this_heap_max : int = self.GetMax()
+        other_heap_max : int = other_heap.GetMax()
+        while this_heap_max != -1 and other_heap_max != -1:
+            if this_heap_max <= other_heap_max:
+                new_heap.Add(other_heap_max)
+                other_heap_max = other_heap.GetMax()
+                continue
+            new_heap.Add(this_heap_max)
+            this_heap_max = other_heap.GetMax()
+        new_heap.Add(this_heap_max)
+        new_heap.Add(other_heap_max)
+        non_empty_heap : Heap = self if other_heap_max == -1 else other_heap
+        while new_heap.Add(non_empty_heap.GetMax()):
+            pass
+        return new_heap

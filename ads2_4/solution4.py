@@ -1,5 +1,7 @@
 ''' Lesson 4 solution. '''
 
+from typing import Tuple
+
 class aBST:
     ''' Binary search tree via array. '''
     def __init__(self, depth : int):
@@ -32,10 +34,22 @@ class aBST:
             self.Tree[add_key_index] = key
         return add_key_index
 
-    def lca(self) ->
-        ''' '''
-        return
+    def lca(self, first : int, second : int) -> int | None:
+        ''' Finds lowest common ancestor of two tree nodes. '''
+        first_index : int = self.FindKeyIndex(first)
+        if first_index is None or first_index < 0:
+            return None
+        second_index : int = self.FindKeyIndex(second)
+        if second_index is None or second_index < 0:
+            return None
+        while first_index != second_index:
+            if first_index > second_index:
+                first_index = (first_index + first_index % 2 - 2) // 2
+                continue
+            second_index = (second_index + second_index % 2 - 2) // 2
+        return self.Tree[first_index]
 
-
-
+    def bfs(self) -> list[int]:
+        ''' Performs bfs traversal for array version of BST. '''
+        return [node_value for node_value in self.Tree if node_value is not None]
 

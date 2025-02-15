@@ -1,5 +1,7 @@
 ''' Lesson 9 task 1 solution. '''
 
+from typing import Tuple
+
 class SimpleTreeNode:
     ''' New child node will be the most right child. '''
     def __init__(self, val, parent) -> None:
@@ -103,18 +105,6 @@ class SimpleTree:
             return 0
         return self._GetLeafCount(self.Root, 0)
 
-    def _WriteNodeLevels(self, ParentNode : SimpleTreeNode, Level : int) -> None:
-        ''' Recursively replaces node value with their level. '''
-        ParentNode.NodeValue = Level
-        for child in ParentNode.Children:
-            self._WriteNodeLevels(child, Level  + 1)
-
-    def WriteLevelInNodeVal(self) -> None:
-        ''' Sets each node value equal to its level in the tree. '''
-        if self.Root is None:
-            return
-        self._WriteNodeLevels(self.Root, 0)
-
     def _FormEdgesToCut(self, ParentNode : SimpleTreeNode, IsEvenTree : bool,
         VertecesBeingCut : list[SimpleTreeNode]) -> bool:
         ''' Recursively checks if subtree contains an even number of nodes
@@ -136,6 +126,22 @@ class SimpleTree:
         self._FormEdgesToCut(self.Root, False, result)
         return result
 
+    def _count_even_subtrees(self, from_node : SimpleTreeNode) -> Tuple[int, bool]:
+        ''' Recursively counts even subtrees for every child.
+            Second return value indicates whether subtree is even. '''
+        even_subtrees_counter : int = 0
+        is_even : bool = False
+        for child in from_node.Children:
+            child_results : Tuple[int, bool] = self._count_even_subtrees(child)
+            even_subtrees_counter += child_results[0]
+            is_even = is_even ^ child_results[1]
+        return (even_subtrees_counter, is_even)
+
+    def total_even_subtrees(self, root_node : SimpleTreeNode) -> int:
+        ''' Returns total number of even subtress of given node. '''
+        if root_node is None:
+            return 0
+        return self._count_even_subtrees(root_node)
 
 
 
