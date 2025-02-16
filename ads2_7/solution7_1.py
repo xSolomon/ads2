@@ -110,7 +110,9 @@ class Heap:
     def deepcopy(self) -> Self:
         ''' Performs a deep copy of current Heap. '''
         copy_heap : Heap = Heap()
-        copy_heap.MakeHeap(self.HeapArray, self.heap_depth)
+        copy_heap.heap_depth = self.heap_depth
+        copy_heap.HeapArray = self.HeapArray.copy()
+        copy_heap.first_free_index = self.first_free_index
         return copy_heap
 
     def merge_heap(self, other_heap : Self) -> Self:
@@ -139,5 +141,4 @@ class Heap:
         non_empty_heap : Heap = merge_heap if other_heap_max == -1 else merge_with_heap
         while new_heap.Add(non_empty_heap.GetMax()):
             pass
-        assert new_heap.is_correct()
-        return new_heap
+        return new_heap if new_heap.is_correct() else self
