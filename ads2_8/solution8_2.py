@@ -2,7 +2,6 @@
 
 from enum import Enum
 
-
 class SearchStatus(Enum):
     ''' Stages of processing while searching for any cycles. '''
     WAITING = 1

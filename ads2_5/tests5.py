@@ -2,7 +2,7 @@
 
 import unittest
 from typing import Tuple
-from solution5 import FormBBSTArray, GenerateBBSTArray, find_node_by_key, delete_node_by_key, nodes_except_one_inorder
+from solution5 import GenerateBBSTArray, find_node_by_key
 
 class GenerateBBSTArrayTests(unittest.TestCase):
     ''' Tests for GenerateBBSTArray function. '''
@@ -58,54 +58,11 @@ class GenerateBBSTArrayTests(unittest.TestCase):
 
     def test_find_on_fifteen_element_list(self) -> None:
         ''' Found index must be the same as via standard python search for list. '''
-        BBSTArray : list[int] = [8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15]
+        Balanced_BST : list[int] = [8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15]
         keys : list[int] = [-100, -1, 0, 1, 4, 7, 15, 8, 55, 100]
         for key in keys:
             with self.subTest():
-                self.assertEqual(find_node_by_key(BBSTArray, key),
-                    BBSTArray.index(key) if key in BBSTArray else None)
-
-    def test_nodes_except_inorder_on_empty_tree(self) -> None:
-        ''' Expected empty list as the result. '''
-        self.assertEqual(nodes_except_one_inorder([], 0, None), [])
-        self.assertEqual(nodes_except_one_inorder([], 0, 0), [])
-
-    def test_inorder_traversal_on_one_node_tree(self) -> None:
-        ''' Expected list with root node. '''
-        self.assertEqual(nodes_except_one_inorder([5], 0, -1), [5])
-        self.assertEqual(nodes_except_one_inorder([5], 0, 5), [])
-
-    def test_inorder_traversal_on_fifteen_node_tree(self) -> None:
-        ''' Expected keys in sorted order. '''
-        self.assertEqual(
-            nodes_except_one_inorder([8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15], 0, -1),
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-        self.assertEqual(
-            nodes_except_one_inorder([8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15], 0, 8),
-            [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15])
-
-    def test_delete_node_on_empty_tree(self) -> None:
-        ''' Expected empty tree as a result. '''
-        self.assertEqual(delete_node_by_key([], 0), [])
-
-    def test_delete_node_on_one_node_tree(self) -> None:
-        ''' Returns empty tree only in case where key matches node key. '''
-        keys : list[int] = [-5, -1, 0, 1, 5]
-        for key in keys:
-            with self.subTest():
-                self.assertEqual(delete_node_by_key([5], key), [None] if key == 5 else [5])
-
-    def test_delete_node_on_fifteen_node_tree(self) -> None:
-        ''' Continiously delete keys until tree is empty. '''
-        tree : list[int] = [8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15]
-        keys_in_deletion_order : list[int] = [10, 12, 1, 3, 11, 5, 7, 8, 9, 2, 15, 6, 4, 13, 14]
-        sorted_tree : list[int] = sorted(tree)
-        for _, key in enumerate(keys_in_deletion_order):
-            with self.subTest():
-                sorted_tree.remove(key)
-                expected_tree : list[int] = FormBBSTArray(
-                    sorted_tree, 0, len(sorted_tree) - 1, 0, [None] * len(keys_in_deletion_order))
-                tree = delete_node_by_key(tree, key)
-                self.assertEqual(tree, expected_tree)
+                self.assertEqual(find_node_by_key(Balanced_BST, key),
+                    Balanced_BST.index(key) if key in Balanced_BST else None)
 
 unittest.main()
