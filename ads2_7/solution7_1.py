@@ -1,6 +1,7 @@
 ''' Lesson 7 tasks 1-3 solution. '''
 
 from typing import Self
+import copy
 from queue import Queue
 
 class Heap:
@@ -14,9 +15,9 @@ class Heap:
         ''' Makes heap from given array by calling Add for each element. '''
         self.heap_depth = depth
         self.HeapArray = [None] * (pow(2, depth + 1) - 1)
+        self.first_free_index = 0
         for _, key in enumerate(a):
             self.Add(key)
-        self.first_free_index = len(a)
 
     def GetMax(self) -> int:
         ''' Return value contained in root, rebuilding heap via sift down. '''
@@ -107,26 +108,28 @@ class Heap:
 
     def merge_heap(self, other_heap : Self) -> Self:
         ''' Merges heap with other using only public interface. '''
+        merge_heap : Self = copy.deepcopy(self)
+        merge_with_heap : Self = copy.deepcopy(other_heap)
         new_heap : Heap = Heap()
-        total_elements : int = self.size() + other_heap.size()
+        total_elements : int = merge_heap.size() + merge_with_heap.size()
         new_heap_depth : int = 0
         max_elements_with_depth : int = 1
         while max_elements_with_depth < total_elements: # Calculate depth of new heap.
             max_elements_with_depth = max_elements_with_depth * 2 + 1
             new_heap_depth += 1
         new_heap.MakeHeap([], new_heap_depth)
-        this_heap_max : int = self.GetMax()
-        other_heap_max : int = other_heap.GetMax()
+        this_heap_max : int = merge_heap.GetMax()
+        other_heap_max : int = merge_with_heap.GetMax()
         while this_heap_max != -1 and other_heap_max != -1:
             if this_heap_max <= other_heap_max:
                 new_heap.Add(other_heap_max)
-                other_heap_max = other_heap.GetMax()
+                other_heap_max = merge_with_heap.GetMax()
                 continue
             new_heap.Add(this_heap_max)
-            this_heap_max = other_heap.GetMax()
+            this_heap_max = merge_with_heap.GetMax()
         new_heap.Add(this_heap_max)
         new_heap.Add(other_heap_max)
-        non_empty_heap : Heap = self if other_heap_max == -1 else other_heap
+        non_empty_heap : Heap = merge_heap if other_heap_max == -1 else merge_with_heap
         while new_heap.Add(non_empty_heap.GetMax()):
             pass
         return new_heap

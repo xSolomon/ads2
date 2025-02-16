@@ -215,25 +215,25 @@ class HeapTests(unittest.TestCase):
         second_heap : Heap = Heap()
         first_heap.MakeHeap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 3)
         second_heap.MakeHeap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 3)
-        with self.subTest():
+        with self.subTest(i = 0):
             merged_heap : Heap = first_heap.merge_heap(second_heap)
             self.assertTrue(merged_heap.is_correct())
             self.assertEqual(merged_heap.size(), 30)
         first_heap.MakeHeap([1, 2, 3, 4, 5, 6, 7], 2)
         second_heap.MakeHeap([8, 9, 10, 11, 12, 13, 14, 15], 3)
-        with self.subTest():
+        with self.subTest(i = 1):
             merged_heap : Heap = first_heap.merge_heap(second_heap)
             self.assertTrue(merged_heap.is_correct())
             self.assertEqual(merged_heap.size(), 15)
         first_heap.MakeHeap([1, 2, 3, 4, 5, 6, 7], 2)
         second_heap.MakeHeap([8, 9, 10, 11, 12, 13, 14, 15, 16], 3)
-        with self.subTest():
+        with self.subTest(i = 2):
             merged_heap : Heap = first_heap.merge_heap(second_heap)
             self.assertTrue(merged_heap.is_correct())
             self.assertEqual(merged_heap.size(), 16)
         first_heap.MakeHeap([1, 1, 1, 1, 1, 1, 1], 2)
         second_heap.MakeHeap([1, 1, 1, 1, 1, 1, 1, 1, 1], 3)
-        with self.subTest():
+        with self.subTest(i = 3):
             merged_heap : Heap = first_heap.merge_heap(second_heap)
             self.assertTrue(merged_heap.is_correct())
             self.assertEqual(merged_heap.size(), 16)
