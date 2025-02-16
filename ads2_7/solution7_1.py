@@ -1,7 +1,6 @@
 ''' Lesson 7 tasks 1-3 solution. '''
 
 from typing import Self
-import copy
 from queue import Queue
 
 class Heap:
@@ -51,6 +50,8 @@ class Heap:
             Returns false if heap is full. '''
         if self.first_free_index == len(self.HeapArray): # Heap if full.
             return False
+        if key is None: # Nothing to add.
+            return
         if key < 0: # Only non-negative keys are valid.
             return False
         self.HeapArray[self.first_free_index] = key
@@ -106,10 +107,16 @@ class Heap:
         ''' Returns number of keys stored. '''
         return self.first_free_index
 
+    def deepcopy(self) -> Self:
+        ''' Performs a deep copy of current Heap. '''
+        copy_heap : Heap = Heap()
+        copy_heap.MakeHeap(self.HeapArray, self.heap_depth)
+        return copy_heap
+
     def merge_heap(self, other_heap : Self) -> Self:
         ''' Merges heap with other using only public interface. '''
-        merge_heap : Self = copy.deepcopy(self)
-        merge_with_heap : Self = copy.deepcopy(other_heap)
+        merge_heap : Self = self.deepcopy()
+        merge_with_heap : Self = other_heap.deepcopy()
         new_heap : Heap = Heap()
         total_elements : int = merge_heap.size() + merge_with_heap.size()
         new_heap_depth : int = 0
@@ -132,4 +139,5 @@ class Heap:
         non_empty_heap : Heap = merge_heap if other_heap_max == -1 else merge_with_heap
         while new_heap.Add(non_empty_heap.GetMax()):
             pass
+        assert new_heap.is_correct()
         return new_heap
