@@ -1,4 +1,4 @@
-''' Lesson 8 task 2 solution. '''
+''' Lesson 10 task 3 solution. '''
 
 from enum import Enum
 

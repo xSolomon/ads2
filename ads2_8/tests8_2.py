@@ -125,7 +125,7 @@ class DirectedGraphTests(unittest.TestCase):
         self.graph.add_vertex(100)
         self.assertFalse(self.graph.is_cyclic())
 
-    def test_is_cyclic_on_fife_node_graph(self) -> None:
+    def test_is_cyclic_on_fife_vertex_graph(self) -> None:
         ''' Test on initially cyclic graph.
             Then, test after removing cycles one by one. '''
         for i in range(5):

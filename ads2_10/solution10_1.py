@@ -1,4 +1,4 @@
-''' Lesson 10 task 1 solution. '''
+''' Lesson 10 task 1, 2 solution. '''
 
 class Vertex:
     ''' Wrapper for raw value. '''
@@ -45,6 +45,12 @@ class SimpleGraph:
         self.m_adjacency[v1][v2] = 0
         self.m_adjacency[v2][v1] = 0
 
+    def _mark_verteces_unvisited(self) -> None:
+        ''' Resets visited status for DFS. '''
+        for vertex in self.vertex:
+            if vertex:
+                vertex.Hit = False
+
     def DFS(self, VFrom : int, VTo : int, current_path : list[int]) -> list[int]:
         ''' Uses stack representing path between verteces. '''
         self.vertex[VFrom].Hit = True
@@ -57,18 +63,21 @@ class SimpleGraph:
             for vertex_index, vertex in enumerate(self.vertex):
                 if self.IsEdge(VFrom, vertex_index) and not vertex.Hit:
                     return self.DFS(vertex_index, VTo, current_path)
-            del current_path[-1]
+            current_path.pop()
         return current_path
 
     def DepthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
         ''' Finds path between verteces in graph using depth-first method. '''
-        for vertex in self.vertex:
-            if vertex:
-                vertex.Hit = False
+        self._mark_verteces_unvisited()
         result_path : list[int] = self.DFS(VFrom, VTo, [])
         return [self.vertex[vertex_index] for vertex_index in result_path]
 
-
-
-
-
+    def is_connected(self) -> bool:
+        ''' Tries to find path from one vertex to all other.
+            If DFS reaches all vertexes - graph is connected. '''
+        for vertex_index in range(1, len(self.vertex)):
+            if not self.vertex[vertex_index]:
+                continue
+            if not self.DepthFirstSearch(0, vertex_index): # Try to find path to each other vertex.
+                return False
+        return True
