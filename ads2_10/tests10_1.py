@@ -2,7 +2,7 @@
 
 import unittest
 from typing import Tuple
-from solution10_1 import Vertex, SimpleGraph
+from solution10_1 import SimpleGraph
 
 class DFSTests(unittest.TestCase):
     ''' Tests for DeepFirstSearch function. '''
@@ -44,6 +44,7 @@ class DFSTests(unittest.TestCase):
             for edge in edges:
                 self.graph.AddEdge(edge[0], edge[1])
             with self.subTest(i = i):
+                self.graph.is_connected()
                 self.assertEqual(self.graph.is_connected(), graph_connected[i])
             for edge in edges:
                 self.graph.RemoveEdge(edge[0], edge[1])

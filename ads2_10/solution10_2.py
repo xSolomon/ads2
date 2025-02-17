@@ -1,4 +1,4 @@
-''' Lesson 10 task 3 solution. '''
+''' Lesson 10 task 2 solution. '''
 
 from enum import Enum
 
@@ -90,11 +90,15 @@ class DirectedGraph:
 
     def is_cyclic(self) -> bool:
         ''' Checks whether graph has at least one cycle. '''
-        # Mark all verteces as unvisited.
+        # Mark all vertex as unvisited.
         search_statuses : list[SearchCyclesStatus] = \
             [SearchCyclesStatus.WAITING for _ in range(self.first_free_index)]
-        # Cause we don't know whether could we reach its vertex from one, we need to check them all.
+        # Check all vertex for cases when we can't reach all vertex from first one.
         for vertex_index, _ in enumerate(search_statuses):
             if self._has_cycles(vertex_index, search_statuses):
                 return True
         return False
+
+    def longest_path_length(self) -> int:
+        ''' Finds length of longest simple path. '''
+        pass

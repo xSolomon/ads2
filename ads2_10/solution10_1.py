@@ -1,4 +1,4 @@
-''' Lesson 10 task 1, 2 solution. '''
+''' Lesson 10 task 1 solution. '''
 
 class Vertex:
     ''' Wrapper for raw value. '''
@@ -47,37 +47,39 @@ class SimpleGraph:
 
     def _mark_verteces_unvisited(self) -> None:
         ''' Resets visited status for DFS. '''
-        for vertex in self.vertex:
-            if vertex:
-                vertex.Hit = False
-
-    def DFS(self, VFrom : int, VTo : int, current_path : list[int]) -> list[int]:
-        ''' Uses stack representing path between verteces. '''
-        self.vertex[VFrom].Hit = True
-        current_path.append(VFrom)
-        while current_path:
-            VFrom = current_path[-1]
-            if self.IsEdge(VFrom, VTo):
-                current_path.append(VTo)
-                return current_path
-            for vertex_index, vertex in enumerate(self.vertex):
-                if self.IsEdge(VFrom, vertex_index) and not vertex.Hit:
-                    return self.DFS(vertex_index, VTo, current_path)
-            current_path.pop()
-        return current_path
 
     def DepthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
         ''' Finds path between verteces in graph using depth-first method. '''
-        self._mark_verteces_unvisited()
-        result_path : list[int] = self.DFS(VFrom, VTo, [])
-        return [self.vertex[vertex_index] for vertex_index in result_path]
+        for vertex in self.vertex:
+            if vertex:
+                vertex.Hit = False
+        if VFrom < 0 or VFrom >= len(self.vertex):
+            return []
+        if not self.vertex[VFrom]:
+            return []
+        current_path : list[int] = [VFrom]
+        while current_path:
+            current_vertex_index : int = current_path[-1]
+            self.vertex[current_vertex_index].Hit = True
+            first_not_visited_index : int = -1
+            for vertex_index, vertex in enumerate(self.vertex):
+                if vertex and not vertex.Hit and self.IsEdge(current_vertex_index, vertex_index):
+                    first_not_visited_index = vertex_index
+                    break
+            if first_not_visited_index != -1 and first_not_visited_index == VTo:
+                current_path.append(VTo)
+                return current_path
+            if first_not_visited_index != -1:
+                current_path.append(first_not_visited_index)
+                continue
+            current_path.pop()
+        return [self.vertex[vertex_index] for vertex_index in current_path]
 
     def is_connected(self) -> bool:
         ''' Tries to find path from one vertex to all other.
             If DFS reaches all vertexes - graph is connected. '''
-        for vertex_index in range(1, len(self.vertex)):
-            if not self.vertex[vertex_index]:
-                continue
-            if not self.DepthFirstSearch(0, vertex_index): # Try to find path to each other vertex.
+        self.DepthFirstSearch(0, -1)
+        for vertex in self.vertex:
+            if vertex and not vertex.Hit:
                 return False
         return True
