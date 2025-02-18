@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-class SearchCyclesStatus(Enum):
+class SearchStatus(Enum):
     ''' Stages of processing while searching for any cycles. '''
     WAITING = 1
     PROCESSING = 2
@@ -12,6 +12,7 @@ class Vertex:
     ''' Wrapper for raw value. '''
     def __init__(self, val : int):
         self.value : int = val # Vertex value/weight.
+        self.search_status : SearchStatus = SearchStatus.WAITING
 
 class DirectedGraph:
     ''' Represented via adjacency matrix and vertex list.
@@ -71,33 +72,79 @@ class DirectedGraph:
         self.m_adjacency[from_vertex_index][to_vertex_index] = 0
         return True
 
-    def _has_cycles(self, from_vertex_index : int,
-        search_statuses : list[SearchCyclesStatus]) -> bool:
+    def _prepare_vertex_for_search(self) -> None:
+        ''' Marks all vertex as unvisited for further processing. '''
+        for vertex in self.vertex: # Make all vertex unvisited.
+            if vertex:
+                vertex.search_status = SearchStatus.WAITING
+
+    def _has_cycles(self, from_vertex_index : int, current_path : list[int]) -> bool:
         ''' Searches cycles using DFS. '''
-        # Reached subgraph that has no cycles.
-        if search_statuses[from_vertex_index] == SearchCyclesStatus.FINISHED:
-            return False
-        # Returned to node currently processing - found cycle.
-        if search_statuses[from_vertex_index] == SearchCyclesStatus.PROCESSING:
-            return True
-        search_statuses[from_vertex_index] = SearchCyclesStatus.PROCESSING
-        for to_vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
-            if self.is_edge(from_vertex_index, to_vertex_index) and \
-               self._has_cycles(to_vertex_index, search_statuses):
+        self.vertex[from_vertex_index].search_status = SearchStatus.PROCESSING
+        to_vertex_index : int = -1
+        for vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
+            # Filter vertex not having edges.
+            if not self.is_edge(from_vertex_index, vertex_index):
+                continue
+            # Filter vertex already completed.
+            if self.vertex[vertex_index].search_status == SearchStatus.FINISHED:
+                continue
+            # Found cycle.
+            if self.vertex[vertex_index].search_status == SearchStatus.PROCESSING:
                 return True
-        search_statuses[from_vertex_index] = SearchCyclesStatus.FINISHED
-        return False
+            to_vertex_index = vertex_index
+            break
+        # Found not visited vertex.
+        if to_vertex_index != -1:
+            current_path.append(to_vertex_index)
+            return self._has_cycles(to_vertex_index, current_path)
+        self.vertex[from_vertex_index].search_status = SearchStatus.FINISHED
+        current_path.pop()
+        if len(current_path) == 0:
+            return False
+        return self._has_cycles(current_path[-1], current_path)
 
     def is_cyclic(self) -> bool:
         ''' Checks whether graph has at least one cycle. '''
-        # Mark all vertex as unvisited.
-        search_statuses : list[SearchCyclesStatus] = \
-            [SearchCyclesStatus.WAITING for _ in range(self.first_free_index)]
-        # Check all vertex for cases when we can't reach all vertex from first one.
-        for vertex_index, _ in enumerate(search_statuses):
-            if self._has_cycles(vertex_index, search_statuses):
+        self._prepare_vertex_for_search()
+        # We must search all graph in case we can't reach all vertex from one.
+        for vertex_index, _ in enumerate(self.vertex):
+            if self.vertex[vertex_index] and self._has_cycles(vertex_index, [vertex_index]):
                 return True
         return False
 
+    def _longest_path_len(self, from_vertex_index : int,
+        current_path : list[int], current_max_len : int) -> int:
+        ''' Searches longest simple path using DFS. '''
+        self.vertex[from_vertex_index].search_status = SearchStatus.PROCESSING
+        to_vertex_index : int = -1
+        for vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
+            # Filter vertex not having edges.
+            if not self.is_edge(from_vertex_index, vertex_index):
+                continue
+            # Filter edges leading to cycles.
+            if self.vertex[vertex_index].search_status != SearchStatus.PROCESSING:
+                continue
+            # Found cycle.
+            if self.vertex[vertex_index].search_status == SearchStatus.PROCESSING:
+            to_vertex_index = vertex_index
+            break
+        # Found not visited vertex.
+        if to_vertex_index != -1:
+            current_path.append(to_vertex_index)
+            return self._has_cycles(to_vertex_index, current_path, )
+        self.vertex[from_vertex_index].search_status = SearchStatus.FINISHED
+        current_path.pop()
+        if len(current_path) == 0:
+            return False
+        return self._has_cycles(current_path[-1], current_path)
+
     def longest_path_length(self) -> int:
         ''' Finds length of longest simple path. '''
+        self._prepare_vertex_for_search()
+        # We must search all graph in case we can't reach all vertex from one.
+        current_max_len : int = 0
+        for vertex_index, _ in enumerate(self.vertex):
+            if self.vertex[vertex_index]:
+                current_max_len = self._longest_path_len(vertex_index, [vertex_index], 0)
+        return current_max_len
