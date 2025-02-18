@@ -170,7 +170,7 @@ class BST:
             return tuple()
         return self._BreadthAllNodes([], [self.Root])
 
-    def _InOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> Tuple[BSTNode]:
+    def _InOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> list[BSTNode]:
         ''' In-order version of depth traversal. '''
         if CurNode.LeftChild is not None:
             self._InOrder(CurNode.LeftChild, ResultNodes)
@@ -178,9 +178,9 @@ class BST:
         if CurNode.RightChild is not None:
             self._InOrder(CurNode.RightChild, ResultNodes)
         if CurNode is self.Root:
-            return tuple(ResultNodes)
+            return ResultNodes
 
-    def _PostOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> Tuple[BSTNode]:
+    def _PostOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> list[BSTNode]:
         ''' Post-order version of depth traversal. '''
         if CurNode.LeftChild is not None:
             self._PostOrder(CurNode.LeftChild, ResultNodes)
@@ -188,9 +188,9 @@ class BST:
             self._PostOrder(CurNode.RightChild, ResultNodes)
         ResultNodes.append(CurNode)
         if CurNode is self.Root:
-            return tuple(ResultNodes)
+            return ResultNodes
 
-    def _PreOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> Tuple[BSTNode]:
+    def _PreOrder(self, CurNode : BSTNode, ResultNodes : list[BSTNode]) -> list[BSTNode]:
         ''' Pre-order version of depth traversal. '''
         ResultNodes.append(CurNode)
         if CurNode.LeftChild is not None:
@@ -198,16 +198,16 @@ class BST:
         if CurNode.RightChild is not None:
             self._PreOrder(CurNode.RightChild, ResultNodes)
         if CurNode is self.Root:
-            return tuple(ResultNodes)
+            return ResultNodes
 
-    def DeepAllNodes(self, search_order : int) -> Tuple[BSTNode]:
+    def DeepAllNodes(self, search_order : int) -> list[BSTNode]:
         ''' Forms list of all tree nodes using deep-first search.
             Second parameter defines exact order, where:
             0 - in order,
             1 - post-order,
             2 - pre-order. '''
         if self.Root is None or search_order not in [0, 1, 2]:
-            return tuple()
+            return []
         traversal_version : dict = {
             0: self._InOrder,
             1: self._PostOrder,

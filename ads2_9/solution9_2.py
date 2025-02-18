@@ -1,7 +1,7 @@
 ''' Lesson 9 task 2 solution. '''
 
 from typing import Self, Callable
-from solution3 import BST
+import bst
 
 class BSTNode:
     ''' Tree node with additional information about its depth level. '''
@@ -86,15 +86,15 @@ class BalancedBST:
         result.extend(self.inorder(root_node.RightChild, predicate)) # right subtree
         return result
 
-    def make_balanced(self, tree : BST) -> Self:
+    def make_balanced(self, tree : bst.BST) -> Self:
         ''' Returns balanced tree, made from result of inorder traversal. '''
         if not tree:
             return None
-        nodes_sorted : list[BSTNode] = tree.DeepAllNodes(0)
+        nodes_sorted : list[BSTNode] = [node.NodeKey for node in tree.DeepAllNodes(0)]
         if len(nodes_sorted) == 0:
             return BalancedBST()
         balanced_tree : BalancedBST = BalancedBST()
         balanced_tree.Root = self.GenerateBBST(None,
-            nodes_sorted, 0, len(nodes_sorted), 0)
+            nodes_sorted, 0, len(nodes_sorted) - 1, 0)
         return balanced_tree
 
