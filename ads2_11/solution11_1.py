@@ -240,8 +240,8 @@ class SimpleGraph:
         return [self.vertex[vertex_index] for vertex_index in result_path]
 
     def BreadthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
-        ''' Finds path between verteces in grapgh using breadth-first method. '''
-        for vertex in self.vertex: # Marking all verteces as not visited.
+        ''' Finds path between vertex in graph using breadth-first method. '''
+        for vertex in self.vertex: # Marking all vertec as not visited.
             if vertex:
                 vertex.Hit = False
         vertex_queue : Queue = Queue()
@@ -258,7 +258,6 @@ class SimpleGraph:
                     vertex.Hit = True
                     vertex_queue.enqueue((vertex_index, path_to_node + [vertex_index]))
         return [] # No path found.
-
 
 
 

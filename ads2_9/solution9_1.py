@@ -134,17 +134,13 @@ class SimpleTree:
         for child in from_node.Children:
             child_results : Tuple[int, bool] = self._count_even_subtrees(child)
             even_subtrees_counter += child_results[0]
-            is_even = is_even ^ child_results[1]
-        return (even_subtrees_counter, is_even)
+            is_even = is_even == child_results[1]
+        return (even_subtrees_counter + (1 if is_even else 0), is_even)
 
     def total_even_subtrees(self, root_node : SimpleTreeNode) -> int:
         ''' Returns total number of even subtress of given node. '''
         if root_node is None:
             return 0
-        return self._count_even_subtrees(root_node)
-
-
-
-
-
-
+        result : Tuple(int, bool) = self._count_even_subtrees(root_node)
+        # Whole tree is not a subtree, so substract if tree is even.
+        return result[0] - 1 if result[1] else result[0]

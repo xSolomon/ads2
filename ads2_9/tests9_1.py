@@ -48,7 +48,7 @@ class EvenTreesTests(unittest.TestCase):
         eighth_node : SimpleTreeNode = SimpleTreeNode(8, sixth_node)
         ninth_node : SimpleTreeNode = SimpleTreeNode(9, eighth_node)
         tenth_node : SimpleTreeNode = SimpleTreeNode(10, eighth_node)
-        tree : SimpleTree = SimpleTree(root_node)
+        tree : SimpleTree = SimpleTree(None)
         tree.AddChild(None, root_node)
         tree.AddChild(root_node, second_node)
         tree.AddChild(root_node, third_node)
@@ -60,5 +60,71 @@ class EvenTreesTests(unittest.TestCase):
         tree.AddChild(eighth_node, ninth_node)
         tree.AddChild(eighth_node, tenth_node)
         self.assertEqual(tree.EvenTrees(), [root_node, third_node, root_node, sixth_node])
+
+    def test_count_even_subtrees_on_empty_tree(self) -> None:
+        ''' Must return 0. '''
+        tree : SimpleTree = SimpleTree(None)
+        self.assertEqual(tree.total_even_subtrees(None), 0)
+
+    def test_count_even_subtrees_on_one_node_tree(self) -> None:
+        ''' Must return 0. '''
+        root_node : SimpleTreeNode = SimpleTreeNode(1, None)
+        tree : SimpleTree = SimpleTree(None)
+        self.assertEqual(tree.total_even_subtrees(root_node), 0)
+
+    def test_count_even_subtrees_on_three_node_trees(self) -> None:
+        ''' Must return 0 for case with balanced tree and 1 otherwise. '''
+        # Balanced tree.
+        root_node : SimpleTreeNode = SimpleTreeNode(1, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(2, None)
+        third_node : SimpleTreeNode = SimpleTreeNode(3, None)
+        tree : SimpleTree = SimpleTree(None)
+        tree.AddChild(None, root_node)
+        tree.AddChild(root_node, second_node)
+        tree.AddChild(root_node, third_node)
+        with self.subTest():
+            self.assertEqual(tree.total_even_subtrees(root_node), 0)
+        # List-like tree.
+        tree : SimpleTree = SimpleTree(None)
+        root_node : SimpleTreeNode = SimpleTreeNode(1, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(2, None)
+        third_node : SimpleTreeNode = SimpleTreeNode(3, None)
+        tree.AddChild(None, root_node)
+        tree.AddChild(root_node, second_node)
+        tree.AddChild(second_node, third_node)
+        with self.subTest():
+            self.assertEqual(tree.total_even_subtrees(root_node), 1)
+
+    def test_count_even_subtrees_on_predefined_tree(self) -> None:
+        ''' Tree root has 4 even trees, and node 2 has 1 even tree. '''
+        root_node : SimpleTreeNode = SimpleTreeNode(1, None)
+        second_node : SimpleTreeNode = SimpleTreeNode(2, root_node)
+        third_node : SimpleTreeNode = SimpleTreeNode(3, root_node)
+        fourth_node : SimpleTreeNode = SimpleTreeNode(4, third_node)
+        fifth_node : SimpleTreeNode = SimpleTreeNode(5, second_node)
+        sixth_node : SimpleTreeNode = SimpleTreeNode(6, root_node)
+        seventh_node : SimpleTreeNode = SimpleTreeNode(7, second_node)
+        eighth_node : SimpleTreeNode = SimpleTreeNode(8, sixth_node)
+        ninth_node : SimpleTreeNode = SimpleTreeNode(9, eighth_node)
+        tenth_node : SimpleTreeNode = SimpleTreeNode(10, eighth_node)
+        eleventh_node : SimpleTreeNode = SimpleTreeNode(11, seventh_node)
+        tree : SimpleTree = SimpleTree(None)
+        tree.AddChild(None, root_node)
+        tree.AddChild(root_node, second_node)
+        tree.AddChild(root_node, third_node)
+        tree.AddChild(third_node, fourth_node)
+        tree.AddChild(second_node, fifth_node)
+        tree.AddChild(root_node, sixth_node)
+        tree.AddChild(second_node, seventh_node)
+        tree.AddChild(sixth_node, eighth_node)
+        tree.AddChild(eighth_node, ninth_node)
+        tree.AddChild(eighth_node, tenth_node)
+        tree.AddChild(seventh_node, eleventh_node)
+        self.assertEqual(tree.total_even_subtrees(root_node), 4)
+        self.assertEqual(tree.total_even_subtrees(second_node), 1)
+        self.assertEqual(tree.total_even_subtrees(sixth_node), 0)
+        self.assertEqual(tree.total_even_subtrees(eighth_node), 0)
+        self.assertEqual(tree.total_even_subtrees(seventh_node), 0)
+        self.assertEqual(tree.total_even_subtrees(third_node), 0)
 
 unittest.main()
