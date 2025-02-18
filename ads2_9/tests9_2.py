@@ -24,8 +24,8 @@ class BalancedBSTTests(unittest.TestCase):
         # Stores all possible five-node tree variants.
         # Most inner list represents two childs being None or other node.
         # Second inner list represents one of tree variants.
+
         tree_to_balance : BalancedBST = BalancedBST()
-        tree_to_balance.Root = nodes[0]
         balanced_tree : BalancedBST = self.tree.make_balanced(tree_to_balance)
 
 
