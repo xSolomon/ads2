@@ -66,7 +66,7 @@ class DirectedGraphTests(unittest.TestCase):
         self.graph.add_vertex(100)
         self.graph.add_vertex(200)
         self.graph.add_vertex(300)
-        #self.assertEqual(self.graph.longest_path_length(), 0)
+        self.assertEqual(self.graph.longest_path_length(), 0)
 
     def test_longest_path_on_graphs_with_one_edge(self) -> None:
         ''' Path length must be 1 except when edge connects same vertex. '''
@@ -76,14 +76,14 @@ class DirectedGraphTests(unittest.TestCase):
         self.graph.add_vertex(400)
         self.graph.add_vertex(500)
         self.graph.add_edge(0, 0)
-        #with self.subTest():
-            #self.assertEqual(self.graph.longest_path_length(), 0)
+        with self.subTest():
+            self.assertEqual(self.graph.longest_path_length(), 0)
         self.graph.add_edge(2, 3)
-        #with self.subTest():
-            #self.assertEqual(self.graph.longest_path_length(), 1)
+        with self.subTest():
+            self.assertEqual(self.graph.longest_path_length(), 1)
         self.graph.remove_edge(2, 3)
         self.graph.add_edge(0, 3)
-        #with self.subTest():
-            #self.assertEqual(self.graph.longest_path_length(), 1)
+        with self.subTest():
+            self.assertEqual(self.graph.longest_path_length(), 1)
 
 unittest.main()

@@ -23,8 +23,8 @@ class DirectedGraph:
         self.vertex : list[int] = [None] * size # List of verteces.
         self.first_free_index : int = 0
 
-    def get_max_vertex(self) -> int:
-        ''' Returns max vertex graph can hold. '''
+    def max_verteces(self) -> int:
+        ''' Returns max_verteces graph can hold. '''
         return self.max_vertex
 
     def add_vertex(self, value : int) -> bool:
@@ -114,37 +114,35 @@ class DirectedGraph:
         return False
 
     def _longest_path_len(self, from_vertex_index : int,
-        current_path : list[int], current_max_len : int) -> int:
+        max_len_path_for_vertex : list[int]) -> int:
         ''' Searches longest simple path using DFS. '''
+        # Reached node we know max len for, return it.
+        if self.vertex[from_vertex_index] == SearchStatus.FINISHED:
+            return max_len_path_for_vertex[from_vertex_index]
+        # Reached cycle - ignore it.
+        if self.vertex[from_vertex_index].search_status == SearchStatus.PROCESSING:
+            return -1
+        max_path_len : int = 0
         self.vertex[from_vertex_index].search_status = SearchStatus.PROCESSING
-        to_vertex_index : int = -1
-        for vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
-            # Filter vertex not having edges.
-            if not self.is_edge(from_vertex_index, vertex_index):
+        # Recursively calculate longest pathes from adjacent vertex.
+        for to_vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
+            # Filter vertex we have edge to.
+            if not self.is_edge(from_vertex_index, to_vertex_index):
                 continue
-            # Filter edges leading to cycles.
-            if self.vertex[vertex_index].search_status != SearchStatus.PROCESSING:
-                continue
-            # Found cycle.
-            if self.vertex[vertex_index].search_status == SearchStatus.PROCESSING:
-            to_vertex_index = vertex_index
-            break
-        # Found not visited vertex.
-        if to_vertex_index != -1:
-            current_path.append(to_vertex_index)
-            return self._has_cycles(to_vertex_index, current_path, )
+            max_path_len = max(max_path_len,
+                self._longest_path_len(to_vertex_index, max_len_path_for_vertex) + 1)
         self.vertex[from_vertex_index].search_status = SearchStatus.FINISHED
-        current_path.pop()
-        if len(current_path) == 0:
-            return False
-        return self._has_cycles(current_path[-1], current_path)
+        max_len_path_for_vertex[from_vertex_index] = max_path_len
+        return max_path_len
 
     def longest_path_length(self) -> int:
         ''' Finds length of longest simple path. '''
         self._prepare_vertex_for_search()
         # We must search all graph in case we can't reach all vertex from one.
+        max_len_path_for_vertex : list[int] = [None] * len(self.vertex)
         current_max_len : int = 0
         for vertex_index, _ in enumerate(self.vertex):
             if self.vertex[vertex_index]:
-                current_max_len = self._longest_path_len(vertex_index, [vertex_index], 0)
+                current_max_len = max(current_max_len,
+                    self._longest_path_len(vertex_index, max_len_path_for_vertex))
         return current_max_len
