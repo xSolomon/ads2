@@ -135,7 +135,9 @@ class SimpleTree:
         for child in from_node.Children:
             child_results : Tuple[int, bool] = self._count_even_subtrees(child)
             even_subtrees_counter += child_results[0]
-            is_even = is_even == child_results[1]
+            # Change even status if explored subtree is odd.
+            if not child_results[1]:
+                is_even = not is_even
         return (even_subtrees_counter + (1 if is_even else 0), is_even)
 
     def total_even_subtrees(self, root_node : SimpleTreeNode) -> int:
