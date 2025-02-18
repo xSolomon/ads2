@@ -22,8 +22,8 @@ class DirectedGraph:
         self.vertex : list[int] = [None] * size # List of verteces.
         self.first_free_index : int = 0
 
-    def max_verteces(self) -> int:
-        ''' Returns max_verteces graph can hold. '''
+    def get_max_vertex(self) -> int:
+        ''' Returns max vertex graph can hold. '''
         return self.max_vertex
 
     def add_vertex(self, value : int) -> bool:

@@ -14,7 +14,7 @@ class DFSTests(unittest.TestCase):
         ''' Aftertest cleanup. '''
         self.graph = None
 
-    def test_is_connected_one_graph_with_one_vertex(self) -> None:
+    def test_is_connected_on_graph_with_one_vertex(self) -> None:
         ''' Graph with one vertex is always connected. '''
         self.graph.AddVertex(100)
         self.assertTrue(self.graph.is_connected())
