@@ -90,10 +90,12 @@ class BalancedBST:
         ''' Returns balanced tree, made from result of inorder traversal. '''
         if not tree:
             return None
+        # Inorder traversal gives keys in a sorted way.
         nodes_sorted : list[BSTNode] = [node.NodeKey for node in tree.DeepAllNodes(0)]
         if len(nodes_sorted) == 0:
             return BalancedBST()
         balanced_tree : BalancedBST = BalancedBST()
+        # Make balanced tree from sorted array.
         balanced_tree.Root = self.GenerateBBST(None,
             nodes_sorted, 0, len(nodes_sorted) - 1, 0)
         return balanced_tree

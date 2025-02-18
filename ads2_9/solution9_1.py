@@ -131,6 +131,7 @@ class SimpleTree:
             Second return value indicates whether subtree is even. '''
         even_subtrees_counter : int = 0
         is_even : bool = False
+        # Sum number of even trees from each subtree, updating root tree even status.
         for child in from_node.Children:
             child_results : Tuple[int, bool] = self._count_even_subtrees(child)
             even_subtrees_counter += child_results[0]
