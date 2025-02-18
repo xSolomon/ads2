@@ -16,25 +16,25 @@ class DirectedGraphTests(unittest.TestCase):
 
     def test_is_edge_on_empty_graph(self) -> None:
         ''' Empty graph has no edges. '''
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 self.assertFalse(self.graph.is_edge(from_vertex_index, to_vertex_index))
 
     def test_remove_edge_on_empty_graph(self) -> None:
         ''' Deleting edge in empty graph always fail. '''
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 self.assertFalse(self.graph.remove_edge(from_vertex_index, to_vertex_index))
 
     def test_remove_vertex_on_empty_graph(self) -> None:
         ''' Deleting vertex in empty graph always fail. '''
-        for vertex_index in range(self.graph.max_verteces()):
+        for vertex_index in range(self.graph.get_max_vertex()):
             self.assertFalse(self.graph.remove_vertex(vertex_index))
 
     def test_add_edge_on_empty_graph(self) -> None:
         ''' Adding edge to graph without verteces always fail. '''
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 self.assertFalse(self.graph.add_edge(from_vertex_index, to_vertex_index))
 
     def test_add_vertex_on_empty_graph(self) -> None:
@@ -44,15 +44,15 @@ class DirectedGraphTests(unittest.TestCase):
     def test_is_edge_on_one_vertex_graph(self) -> None:
         ''' Cause no edges added, should always fail. '''
         self.graph.add_vertex(100)
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 self.assertFalse(self.graph.is_edge(from_vertex_index, to_vertex_index))
 
     def test_add_edge_on_one_vertex_graph(self) -> None:
         ''' One vertex graph could have only one edge. '''
         self.graph.add_vertex(100)
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 if from_vertex_index == 0 and from_vertex_index == to_vertex_index:
                     self.assertTrue(self.graph.add_edge(from_vertex_index, to_vertex_index))
                     self.assertTrue(self.graph.is_edge(from_vertex_index, to_vertex_index))
@@ -62,8 +62,8 @@ class DirectedGraphTests(unittest.TestCase):
     def test_remove_edge_on_one_vertex_graph(self) -> None:
         ''' Removing edge in graph with one vertex always fail. '''
         self.graph.add_vertex(100)
-        for from_vertex_index in range(self.graph.max_verteces()):
-            for to_vertex_index in range(self.graph.max_verteces()):
+        for from_vertex_index in range(self.graph.get_max_vertex()):
+            for to_vertex_index in range(self.graph.get_max_vertex()):
                 self.assertFalse(self.graph.remove_edge(from_vertex_index, to_vertex_index))
 
     def test_add_vertex_on_one_vertex_graph(self) -> None:
@@ -141,22 +141,25 @@ class DirectedGraphTests(unittest.TestCase):
             (1, 4),
             (2, 0)
         ]
+        edges_to_remove : list[Tuple[int, int]] = [
+            (3, 3),
+            (2, 0),
+            (1, 4),
+            (1, 0)
+        ]
+        expected_results : list[bool] = [
+            True,
+            True,
+            True,
+            True,
+            False
+        ]
         for edge in edges:
             self.graph.add_edge(edge[0], edge[1])
-        with self.subTest():
-            self.assertTrue(self.graph.is_cyclic())
-        with self.subTest():
-            self.graph.remove_edge(3, 3)
-            self.assertTrue(self.graph.is_cyclic())
-        with self.subTest():
-            self.graph.remove_edge(2, 0)
-            self.assertTrue(self.graph.is_cyclic())
-        with self.subTest():
-            self.graph.remove_edge(1, 4)
-            self.assertTrue(self.graph.is_cyclic())
-        with self.subTest():
-            self.graph.remove_edge(1, 0)
-            self.assertFalse(self.graph.is_cyclic())
-
+        for i, expected_result in enumerate(expected_results):
+            with self.subTest(i = i, expected_result = expected_result):
+                self.assertEqual(self.graph.is_cyclic(), expected_result)
+            if i < len(edges_to_remove):
+                self.graph.remove_edge(edges_to_remove[i][0], edges_to_remove[i][1])
 
 unittest.main()

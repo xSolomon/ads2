@@ -101,4 +101,3 @@ class DirectedGraph:
 
     def longest_path_length(self) -> int:
         ''' Finds length of longest simple path. '''
-        pass

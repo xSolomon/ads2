@@ -1,6 +1,5 @@
 ''' Lesson 8 task 2 solution. '''
 
-from typing import Callable
 from enum import Enum
 
 class SearchStatus(Enum):
@@ -24,8 +23,8 @@ class DirectedGraph:
         self.vertex : list[Vertex] = [None] * size # List of verteces.
         self.first_free_index : int = 0
 
-    def max_verteces(self) -> int:
-        ''' Returns max_verteces graph can hold. '''
+    def get_max_vertex(self) -> int:
+        ''' Returns max_vertex graph can hold. '''
         return self.max_vertex
 
     def add_vertex(self, value : int) -> bool:
@@ -73,30 +72,39 @@ class DirectedGraph:
         self.m_adjacency[from_vertex_index][to_vertex_index] = 0
         return True
 
-    def _has_cycles(self, from_vertex_index : int,
-        search_statuses : list[SearchStatus]) -> bool:
+    def _has_cycles(self, from_vertex_index : int, current_path : list[int]) -> bool:
         ''' Searches cycles using DFS. '''
-        # Reached subgraph that has no cycles.
-        if search_statuses[from_vertex_index] == SearchStatus.FINISHED:
-            return False
-        # Returned to node currently processing - found cycle.
-        if search_statuses[from_vertex_index] == SearchStatus.PROCESSING:
-            return True
-        search_statuses[from_vertex_index] = SearchStatus.PROCESSING
-        for to_vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
-            if self.is_edge(from_vertex_index, to_vertex_index) and \
-               self._has_cycles(to_vertex_index, search_statuses):
+        self.vertex[from_vertex_index].search_status = SearchStatus.PROCESSING
+        to_vertex_index : int = -1
+        for vertex_index, _ in enumerate(self.m_adjacency[from_vertex_index]):
+            # Filter vertex not having edges.
+            if not self.is_edge(from_vertex_index, vertex_index):
+                continue
+            # Filter vertex already completed.
+            if self.vertex[vertex_index].search_status == SearchStatus.FINISHED:
+                continue
+            # Found cycle.
+            if self.vertex[vertex_index].search_status == SearchStatus.PROCESSING:
                 return True
-        search_statuses[from_vertex_index] = SearchStatus.FINISHED
-        return False
+            to_vertex_index = vertex_index
+            break
+        # Found not visited vertex.
+        if to_vertex_index != -1:
+            current_path.append(to_vertex_index)
+            return self._has_cycles(to_vertex_index, current_path)
+        self.vertex[from_vertex_index].search_status = SearchStatus.FINISHED
+        current_path.pop()
+        if len(current_path) == 0:
+            return False
+        return self._has_cycles(current_path[-1], current_path)
 
     def is_cyclic(self) -> bool:
         ''' Checks whether graph has at least one cycle. '''
-        # Mark all verteces as unvisited.
-        search_statuses : list[SearchStatus] = \
-            [SearchStatus.WAITING for _ in range(self.first_free_index)]
-        # Cause we don't know whether could we reach its vertex from one, we need to check them all.
-        for vertex_index, _ in enumerate(search_statuses):
-            if self._has_cycles(vertex_index, search_statuses):
+        for vertex in self.vertex: # Make all vertex unvisited.
+            if vertex:
+                vertex.search_status = SearchStatus.WAITING
+        # We must search all graph in case we can't reach all vertex from one.
+        for vertex_index, _ in enumerate(self.vertex):
+            if self.vertex[vertex_index] and self._has_cycles(vertex_index, [vertex_index]):
                 return True
         return False
