@@ -90,7 +90,7 @@ class BalancedBST:
         ''' Returns balanced tree, made from result of inorder traversal. '''
         if not tree:
             return None
-        nodes_sorted : list[BSTNode] = tree.inorder(tree.Root, lambda key : True)
+        nodes_sorted : list[BSTNode] = tree.DeepAllNodes(0)
         if len(nodes_sorted) == 0:
             return BalancedBST()
         balanced_tree : BalancedBST = BalancedBST()

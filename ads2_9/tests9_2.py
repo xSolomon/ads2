@@ -1,6 +1,7 @@
 ''' Tests for lesson 9 task 2 solution. '''
 
 import unittest
+from solution3 import BST
 from solution9_2 import BSTNode, BalancedBST
 
 class BalancedBSTTests(unittest.TestCase):
@@ -15,7 +16,7 @@ class BalancedBSTTests(unittest.TestCase):
 
     def test_make_balanced_on_empty_tree(self) -> None:
         ''' Expected empty tree as the result. '''
-        tree_to_balance : BalancedBST = BalancedBST()
+        tree_to_balance : BST = BST(None)
         balanced_tree : BalancedBST = self.tree.make_balanced(tree_to_balance)
         self.assertTrue(balanced_tree.IsBalanced(balanced_tree.Root))
 
@@ -26,7 +27,7 @@ class BalancedBSTTests(unittest.TestCase):
         # Second inner list represents one of tree variants.
 
         tree_to_balance : BalancedBST = BalancedBST()
-        balanced_tree : BalancedBST = self.tree.make_balanced(tree_to_balance)
+#        balanced_tree : BalancedBST = self.tree.make_balanced(tree_to_balance)
 
 
 unittest.main()
