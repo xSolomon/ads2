@@ -1,5 +1,7 @@
 ''' Lesson 11 task 1 solution. '''
 
+from typing import Tuple
+
 class NodeBase:
     ''' Base Node, contains no data. '''
     def __init__(self):
@@ -216,6 +218,12 @@ class SimpleGraph:
         self.m_adjacency[v1][v2] = 0
         self.m_adjacency[v2][v1] = 0
 
+    def _mark_verteces_unvisited(self) -> None:
+        ''' Resets visited status for DFS. '''
+        for vertex in self.vertex:
+            if vertex:
+                vertex.Hit = False
+
     def DFS(self, VFrom : int, VTo : int, current_path : list[int]) -> list[int]:
         ''' Uses stack representing path between verteces. '''
         self.vertex[VFrom].Hit = True
@@ -233,22 +241,18 @@ class SimpleGraph:
 
     def DepthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
         ''' Finds path between verteces in graph using depth-first method. '''
-        for vertex in self.vertex:
-            if vertex:
-                vertex.Hit = False
+        self._mark_verteces_unvisited()
         result_path : list[int] = self.DFS(VFrom, VTo, [])
         return [self.vertex[vertex_index] for vertex_index in result_path]
 
     def BreadthFirstSearch(self, VFrom : int, VTo : int) -> list[Vertex]:
         ''' Finds path between vertex in graph using breadth-first method. '''
-        for vertex in self.vertex: # Marking all vertec as not visited.
-            if vertex:
-                vertex.Hit = False
-        vertex_queue : Queue = Queue()
-        vertex_queue.enqueue((VFrom, [VFrom])) # Store path along with each vertex.
-        while vertex_queue.size() > 0:
+        self._mark_verteces_unvisited()
+        not_visited_vertex : Queue = Queue()
+        not_visited_vertex.enqueue((VFrom, [VFrom])) # Store path along with each vertex.
+        while not_visited_vertex.size() > 0:
             path_to_node : list[int] = []
-            VFrom, path_to_node = vertex_queue.dequeue()
+            VFrom, path_to_node = not_visited_vertex.dequeue()
             for vertex_index, vertex in enumerate(self.vertex):
                 if not self.IsEdge(VFrom, vertex_index): # Not adjacent vertex, skip it.
                     continue
@@ -256,11 +260,42 @@ class SimpleGraph:
                     return [self.vertex[vertex_index] for vertex_index in path_to_node + [VTo]]
                 if not vertex.Hit: # Not visited vertex, mark it and enqueue.
                     vertex.Hit = True
-                    vertex_queue.enqueue((vertex_index, path_to_node + [vertex_index]))
+                    not_visited_vertex.enqueue((vertex_index, path_to_node + [vertex_index]))
         return [] # No path found.
 
+    def _all_cycles_bfs(self, from_vertex_index : int) -> list[list[Tuple[int, int]]]:
+        ''' Performs bfs to detect cycles. '''
+        cycles : list[list[Tuple[int,int]]] = []
+        not_visited_vertex : Queue = Queue()
+        vertex_parent : list[int] = [None * len(self.vertex)]
+        not_visited_vertex.enqueue(from_vertex_index)
+        self.vertex[from_vertex_index].Hit = True
+        while not_visited_vertex.size() > 0:
+            current_vertex_index : int = not_visited_vertex.dequeue()
+            for to_vertex_index, vertex in enumerate(self.vertex):
+                # Filter non adjacent vertex.
+                if not self.IsEdge(current_vertex_index, to_vertex_index):
+                    continue
+                # Mark as visited and to queue.
+                if not vertex.Hit:
+                    vertex.Hit = True
+                    vertex_parent[to_vertex_index] = current_vertex_index
+                    not_visited_vertex.enqueue(to_vertex_index)
+                    continue
+                # Found cycle, add it to the result.
+                cycle_edges : list[Tuple(int, int)] = [(current_vertex_index, to_vertex_index)]
 
+        
 
+    def find_all_cycles(self) -> list[list[Tuple[int, int]]]:
+        ''' Find all cycles in graph and return it as a list of edges indices. '''
+        self._mark_verteces_unvisited()
+        result : list[list[Tuple[int, int]]] = []
+        # Scan each vertex in case of not connected graph.
+        for from_vertex_index, vertex in enumerate(self.vertex):
+            if vertex and not vertex.Hit:
+                result.extend(self._all_cycles_bfs(from_vertex_index))
+        return result
 
 
 

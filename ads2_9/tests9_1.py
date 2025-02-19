@@ -127,4 +127,34 @@ class EvenTreesTests(unittest.TestCase):
         self.assertEqual(tree.total_even_subtrees(seventh_node), 0)
         self.assertEqual(tree.total_even_subtrees(third_node), 0)
 
+    def test_count_even_subtrees_on_nine_node_tree(self) -> None:
+        ''' Tree structure: root -> left
+                                        -> left
+                                               -> left
+                                               -> right
+                                        -> right
+                                 -> right
+                                        -> left
+                                        -> right '''
+        root_node : SimpleTreeNode = SimpleTreeNode(0, None)
+        one_node : SimpleTreeNode = SimpleTreeNode(1, root_node)
+        two_node : SimpleTreeNode = SimpleTreeNode(2, one_node)
+        three_node : SimpleTreeNode = SimpleTreeNode(3, two_node)
+        four_node : SimpleTreeNode = SimpleTreeNode(4, two_node)
+        five_node : SimpleTreeNode = SimpleTreeNode(5, one_node)
+        six_node : SimpleTreeNode = SimpleTreeNode(6, root_node)
+        seven_node : SimpleTreeNode = SimpleTreeNode(7, six_node)
+        eight_node : SimpleTreeNode = SimpleTreeNode(8, six_node)
+        tree : SimpleTree = SimpleTree(None)
+        tree.AddChild(None, root_node)
+        tree.AddChild(root_node, one_node)
+        tree.AddChild(one_node, two_node)
+        tree.AddChild(two_node, three_node)
+        tree.AddChild(two_node, four_node)
+        tree.AddChild(one_node, five_node)
+        tree.AddChild(root_node, six_node)
+        tree.AddChild(six_node, seven_node)
+        tree.AddChild(six_node, eight_node)
+        self.assertEqual(tree.total_even_subtrees(root_node), 0)
+
 unittest.main()
