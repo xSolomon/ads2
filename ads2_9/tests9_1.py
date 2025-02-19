@@ -155,6 +155,9 @@ class EvenTreesTests(unittest.TestCase):
         tree.AddChild(root_node, six_node)
         tree.AddChild(six_node, seven_node)
         tree.AddChild(six_node, eight_node)
-        self.assertEqual(tree.total_even_subtrees(root_node), 0)
+        for i in range(9):
+            with self.subTest():
+                node : SimpleTreeNode = tree.FindNodesByValue(i)[0]
+                self.assertEqual(tree.total_even_subtrees(node), 0)
 
 unittest.main()
